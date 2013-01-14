@@ -94,13 +94,24 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
+.record {
+    display: inline-block;
+    background-color: black;
+    width: 150px;
+    height: 150px;
+    margin: 5px;
+    overflow: hidden;
+}
 
+.artist {
+    margin: 5px;
+    margin-bottom: 0px;
+}
 
-
-
-
-
-
+.title {
+    margin: 5px;
+    margin-top: 0px;
+}
 
 
 

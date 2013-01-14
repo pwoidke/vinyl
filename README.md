@@ -1,4 +1,4 @@
-# [HTML5 Boilerplate](http://html5boilerplate.com)
+# Vinyl
 
 This is a web app used for viewing, sorting, and managing my vinyl collection. The collection is stored as XML data (obtained from [Discogs](http://www.discogs.com)) and displayed using HTML, CSS, and jQuery.
 

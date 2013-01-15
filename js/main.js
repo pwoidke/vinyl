@@ -12,82 +12,20 @@ xmlDoc=xmlhttp.responseText;
 var X2JS = new X2JS();
 // XML string to JSON
 
-var records =
-{"releases": [
-    {"release": [
-        {"release": [
-            {"images": [
-                {"image": [
-                    {"@attributes":{
-                        "height": "",
-                        "type": "",
-                        "uri": "",
-                        "uri150": "",
-                        "width": ""
-                    }}
-                ]}
-            ]},
-            {"artists": [
-                {"artist": [
-                    {"name": ""}
-                ]}
-            ]},
-            {"title": ""},
-            {"labels": [
-                {"label": [
-                    {"@attributes":{
-                        "name": ""
-                    }}
-                ]}
-            ]},
-            {"formats": [
-                {"format": [
-                    {"@attributes":{
-                        "name": ""
-                    }}
-                ]},
-                {"descriptions": [
-                    {"description": ""}
-                ]}
-            ]},
-            {"genres": [
-                {"genre": ""}
-            ]},
-            {"styles": [
-                {"style": ""}
-            ]},
-            {"country": ""},
-            {"released": ""},
-            {"tracklist": [
-                {"track": [
-                    {"position": ""},
-                    {"title": ""},
-                    {"duration": ""}
-                ]}
-            ]},
-            {"videos": [
-                {"video": [
-                    {"@attributes":{
-                        "src": ""
-                    }}
-                ]}
-            ]},
-            {"Collection_Notes": ""}
-        ]}
-    ]}
-]};
-
 records = X2JS.xml_str2json( xmlDoc );
 
-//alert(records.releases.release[0].images.image.toSource());
+//alert(records.releases.release[0]._id);
 
 
 for(var i=0;i<records.releases.release.length;i++)
 {
-    $('body').append('<div class="record"><div class="artist">' + records.releases.release[i].artists.artist.name + '</div><div class="title">' + records.releases.release[i].title + '</div></div>');
+    $('body').append('<div class="record" id="' + records.releases.release[i]._id + '"><div class="artist">' + records.releases.release[i].artists.artist.name + '</div><div class="title">' + records.releases.release[i].title + '</div></div>');
     try
     {
         $('.record:last').css('background-image','url("' + records.releases.release[i].images.image._uri150 + '")');
+        $('.record:last').click(function() {
+            alert("Handler called for #" + this.id);
+        });
     }
     catch(err)
     {

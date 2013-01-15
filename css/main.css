@@ -94,26 +94,41 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
-.record {
+#container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+}
+
+#records {
+    display: inline-block;
+    width: 100%;
+    height: auto;
+}
+
+.artist-title {
+    position: relative;
+    top: -10px;
+    font-size: 10px;
+    display: inline;
+    margin-right: 10px;
+    margin-left: 5px;
+}
+
+.spine {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    position: relative;
+    top: 120px;
+    right: 120px;
     display: inline-block;
     background-color: black;
-    width: 150px;
-    height: 150px;
-    margin: 5px;
+    width: 250px;
+    height: 10px;
+    margin-bottom:250px;
+    margin-right: -240px;
     overflow: hidden;
 }
-
-.artist {
-    margin: 5px;
-    margin-bottom: 0px;
-}
-
-.title {
-    margin: 5px;
-    margin-top: 0px;
-}
-
-
 
 
 

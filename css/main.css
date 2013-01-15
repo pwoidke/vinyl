@@ -98,21 +98,21 @@ textarea {
     margin-left: auto;
     margin-right: auto;
     width: 90%;
-}
-
-#records {
-    display: inline-block;
-    width: 100%;
     height: auto;
 }
 
-.artist-title {
+#shelf {
     position: relative;
-    top: -10px;
-    font-size: 10px;
-    display: inline;
-    margin-right: 10px;
-    margin-left: 5px;
+    height: 260px;
+    overflow: hidden;
+}
+
+#records {
+    min-width: 800px;
+    height: 260px;
+    overflow: hidden;
+    position: relative;
+    left: 0px;
 }
 
 .spine {
@@ -125,11 +125,40 @@ textarea {
     background-color: black;
     width: 250px;
     height: 10px;
-    margin-bottom:250px;
+    margin-bottom: 250px;
     margin-right: -240px;
     overflow: hidden;
 }
 
+.artist-title {
+    position: relative;
+    top: -10px;
+    font-size: 10px;
+    display: inline;
+    margin-right: 10px;
+    margin-left: 5px;
+}
+
+.buttons {
+    z-index: 10;
+    color: black;
+}
+
+.scroll-left {
+    float: left;
+    width: 30px;
+    height: 80px;
+    background-color: white;
+    text-align: center;
+}
+
+.scroll-right {
+    float: right;
+    width: 30px;
+    height: 80px;
+    background-color: white;
+    text-align: center;
+}
 
 
 

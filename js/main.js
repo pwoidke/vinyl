@@ -15,9 +15,10 @@ records = X2JS.xml_str2json( xmlDoc );
 
 function getRandomColor()
 {
-    var hue = 'rgb(' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ')';
-    return hue;
+    return 'rgb(' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ')';
 }
+
+$('#records').css("width", ((records.releases.release.length * 10) + 20) + "px");
 
 for(var i=0;i<records.releases.release.length;i++)
 {
@@ -61,10 +62,37 @@ for(var i=0;i<records.releases.release.length;i++)
 
 /* Expand album on mouseover */
 $(".spine").hover(function(){
-    $(this).stop(true, false).animate({ height: "30px", marginRight: "-230px", marginLeft: "10px", marginBottom: "240px"});
-    $(this).children().stop(true, false).animate({ fontSize: "20px", top: "0px" });
-
+    $(this).stop(true, false).animate({height: "30px", marginRight: "-230px", marginLeft: "10px", marginBottom: "240px", marginTop: "-10px"});
+    $(this).children().stop(true, false).animate({fontSize: "20px", top: "0px" });
 }, function() {
-    $(this).stop(true, false).animate({ height: "10px", marginRight: "-240px", marginLeft: "0px", marginBottom: "250px"});
-    $(this).children().stop(true, false).animate({ fontSize: "10px", top: "-10px" });
+    $(this).stop(true, false).animate({height: "10px", marginRight: "-240px", marginLeft: "0px", marginBottom: "250px", marginTop: "0px"});
+    $(this).children().stop(true, false).animate({fontSize: "10px", top: "-10px" });
 });
+
+/* Scroll records on mouseover on Left/Right buttons */
+var scrolling = false;
+
+$(".scroll-left").bind("mouseover", function(event) {
+        scrolling = true;
+        scrollContent("left");
+}).bind("mouseout", function(event) {
+    scrolling = false;
+});
+
+$(".scroll-right").bind("mouseover", function(event) {
+        scrolling = true;
+        scrollContent("right");
+}).bind("mouseout", function(event) {
+    scrolling = false;
+});
+
+function scrollContent(direction) {
+    var amount = (direction === "right" ? "-=1px" : "+=1px");
+    $("#records").animate({
+        left: amount
+    }, 1, function() {
+        if (scrolling) {
+            scrollContent(direction);
+        }
+    });
+}

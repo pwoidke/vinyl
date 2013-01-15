@@ -103,13 +103,13 @@ textarea {
 
 #shelf {
     position: relative;
-    height: 260px;
+    height: 500px;
     overflow: hidden;
 }
 
 #records {
     min-width: 800px;
-    height: 260px;
+    height: 500px;
     overflow: hidden;
     position: relative;
     left: 0px;
@@ -119,21 +119,21 @@ textarea {
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
     position: relative;
-    top: 120px;
-    right: 120px;
+    top: 240px; /* = (width - 20) / 2 */
+    right: 240px; /* = (width - 20) / 2 */
     display: inline-block;
     background-color: black;
-    width: 250px;
-    height: 10px;
-    margin-bottom: 250px;
-    margin-right: -240px;
+    width: 500px;
+    height: 20px;
+    margin-bottom: 500px; /* = width */
+    margin-right: -477px; /* = -(width - 23) */
     overflow: hidden;
 }
 
 .artist-title {
     position: relative;
-    top: -10px;
-    font-size: 10px;
+    top: -3px;
+    font-size: 15px;
     display: inline;
     margin-right: 10px;
     margin-left: 5px;

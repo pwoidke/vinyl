@@ -58,6 +58,15 @@ var infoShown = false;
 
 $(".spine").click(function(e) {
     //Shift records so that spine is centered on shelf
+    $("#records").animate({
+        left: (parseInt($("#records").css("left"))          //Get the amount the records div is shifted left
+                + (($("#shelf").width()/2)                  //Add the xPos of the center of the shelf div
+                - (e.clientX - $("#shelf").offset().left)) //Minus the xPos of the click from the center to get the amount to shift
+                - (10 - (e.clientX - $(this).offset().left)))   /*Align center of spine with center of shelf
+                                                                  (use unexpanded height because when it moves
+                                                                  it won't have the mouseover on it anymore)*/
+    });
+
 
     if(infoShown == false)
     {

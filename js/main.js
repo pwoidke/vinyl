@@ -52,13 +52,36 @@ for(var i=0;i<records.releases.release.length;i++)
     {
         console.log(err.message);
     }
-    finally
-    {
-        $('.spine:last').click(function() {
-            alert("Handler called for #" + this.id);
-        });
-    }
 }
+
+var infoShown = false;
+
+$(".spine").click(function(e) {
+    //Shift records so that spine is centered on shelf
+
+    if(infoShown == false)
+    {
+        $("#container").animate({top:"25px"}, 500);
+        $(".info").animate({opacity:"1.0"}, 500);
+        infoShown = true;
+        loadInfo(this.id);
+    }
+    else
+    {
+        loadInfo(this.id);
+    }
+});
+
+function loadInfo(id)
+{
+    $(".artist").text('#'+id);
+}
+
+$('.info').click(function() {
+    $("#container").animate({top:"-200px"}, 500);
+    $(".info").animate({opacity:"0.0"}, 500);
+    infoShown = false;
+});
 
 var spineWidth = 600;
 

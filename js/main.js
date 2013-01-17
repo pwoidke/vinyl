@@ -26,13 +26,21 @@ for(var i=0;i<records.releases.release.length;i++)
     try
     {
         /* Add Artist & Title */
-        if(typeof records.releases.release[i].artists.artist[0] === 'undefined')
+        /*if(typeof records.releases.release[i].artists.artist[0] === 'undefined')
         {
             $('#records').append('<div class="spine" id="' + records.releases.release[i]._id + '"><div class="artist-title">' + records.releases.release[i].artists.artist.name + ' - ' + records.releases.release[i].title + '</div></div>');
         }
         else
         {
             $('#records').append('<div class="spine" id="' + records.releases.release[i]._id + '"><div class="artist-title">' + records.releases.release[i].artists.artist[0].name + ' - ' + records.releases.release[i].title + '</div></div>');
+        }*/
+        if(typeof records.releases.release[i].artists.artist[0] === 'undefined')
+        {
+            $('#records').append('<div class="spine" id="' + i + '"><div class="artist-title">' + records.releases.release[i].artists.artist.name + ' - ' + records.releases.release[i].title + '</div></div>');
+        }
+        else
+        {
+            $('#records').append('<div class="spine" id="' + i + '"><div class="artist-title">' + records.releases.release[i].artists.artist[0].name + ' - ' + records.releases.release[i].title + '</div></div>');
         }
 
         /* Set background color */
@@ -83,7 +91,16 @@ $(".spine").click(function(e) {
 
 function loadInfo(id)
 {
-    $(".artist").text('#'+id);
+    if(typeof records.releases.release[id].artists.artist[0] === 'undefined')
+    {
+        $(".artist").text(records.releases.release[id].artists.artist.name);
+        $(".title").text(records.releases.release[id].title);
+    }
+    else
+    {
+        $(".artist").text(records.releases.release[id].artists.artist[0].name);
+        $(".title").text(records.releases.release[id].title);
+    }
 }
 
 $('.info').click(function() {

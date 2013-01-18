@@ -79,7 +79,7 @@ $(".spine").click(function(e) {
         left: (parseInt($("#records").css("left"))          //Get the amount the records div is shifted left
                 + (($("#shelf").width()/2)                  //Add the xPos of the center of the shelf div
                 - (e.clientX - $("#shelf").offset().left)) //Minus the xPos of the click from the center to get the amount to shift
-                - (10 - (e.clientX - $(this).offset().left)))   /*Align center of spine with center of shelf
+                - ((spineHeight/2) - (e.clientX - $(this).offset().left)))   /*Align center of spine with center of shelf
                                                                   (use unexpanded height because when it moves
                                                                   it won't have the mouseover on it anymore)*/
     });
@@ -182,19 +182,51 @@ $('.info').click(function() {
 });
 
 var spineWidth = 600;
-//TODO: Set heights programmatically
+var spineHeight = 20;
 
 $("#shelf").css("height", (spineWidth+"px"));
 $("#records").css("height", (spineWidth+"px"));
-$(".spine").css({width: (spineWidth+"px"), top: (((spineWidth-20)/2)+"px"), right: (((spineWidth-20)/2)+"px"), marginBottom: (spineWidth+"px"), marginRight: ((-1*(spineWidth-23))+"px")});
+$(".spine").css({
+    width: (spineWidth+"px"),
+    height: (spineHeight+"px"),
+    top: (((spineWidth-spineHeight)/2)+"px"),
+    right: (((spineWidth-spineHeight)/2)+"px"),
+    marginBottom: (spineWidth+"px"),
+    marginRight: ((-1*(spineWidth-(spineHeight+3)))+"px")
+});
+$(".spine").children().css({
+    fontSize: (.75*spineHeight+"px"),
+    top: "-3px",
+    marginLeft: (.25*spineHeight+"px")
+});
 
 /* Expand album on mouseover */
 $(".spine").hover(function(){
-    $(this).stop(true, false).animate({height: "30px",  width: ((spineWidth+10)+"px"), marginTop: "-10px"}); /* new width = old width + 10 */
-    $(this).children().stop(true, false).animate({fontSize: "20px", top: "0px", marginLeft: "20px" });
+    $(this).stop(true, false).animate({
+        height: (1.5*spineHeight+"px"),
+        top: (((spineWidth-spineHeight)/2)+(.25*spineHeight)+"px"),
+        right: (((spineWidth-spineHeight)/2)-(.25*spineHeight)+"px"),
+        marginBottom: (spineWidth+"px"),
+        marginRight: ((-1*(spineWidth-(spineHeight+3)))+(.5*spineHeight)+"px")
+    });
+    $(this).children().stop(true, false).animate({
+        fontSize: (spineHeight+"px"),
+        top: "0px",
+        marginLeft: (.5*spineHeight+"px")
+    });
 }, function() {
-    $(this).stop(true, false).animate({height: "20px", width: (spineWidth+"px"), marginTop: "0px"});
-    $(this).children().stop(true, false).animate({fontSize: "15px", top: "-3px", marginLeft: "5px" });
+    $(this).stop(true, false).animate({
+        height: (spineHeight+"px"),
+        top: (((spineWidth-spineHeight)/2)+"px"),
+        right: (((spineWidth-spineHeight)/2)+"px"),
+        marginBottom: (spineWidth+"px"),
+        marginRight: ((-1*(spineWidth-(spineHeight+3)))+"px")
+    });
+    $(this).children().stop(true, false).animate({
+        fontSize: (.75*spineHeight+"px"),
+        top: "-3px",
+        marginLeft: (.25*spineHeight+"px")
+    });
 });
 
 /* Scroll records on mouseover on Left/Right buttons */

@@ -21,8 +21,6 @@ xmlDoc=xmlhttp.responseText;
 var X2JS = new X2JS();
 records = X2JS.xml_str2json( xmlDoc );
 
-//alert(records.releases.__cnt);
-
 function getRandomColor()
 {
     return 'rgb(' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ')';
@@ -34,15 +32,6 @@ for(var i=0;i<records.releases.release.length;i++)
 {
     try
     {
-        /* Add Artist & Title */
-        /*if(typeof records.releases.release[i].artists.artist[0] === 'undefined')
-        {
-            $('#records').append('<div class="spine" id="' + records.releases.release[i]._id + '"><div class="artist-title">' + records.releases.release[i].artists.artist.name + ' - ' + records.releases.release[i].title + '</div></div>');
-        }
-        else
-        {
-            $('#records').append('<div class="spine" id="' + records.releases.release[i]._id + '"><div class="artist-title">' + records.releases.release[i].artists.artist[0].name + ' - ' + records.releases.release[i].title + '</div></div>');
-        }*/
         if(typeof records.releases.release[i].artists.artist[0] === 'undefined')
         {
             $('#records').append('<div class="spine" id="' + i + '"><div class="artist-title">' + records.releases.release[i].artists.artist.name + ' - ' + records.releases.release[i].title + '</div></div>');
@@ -54,16 +43,6 @@ for(var i=0;i<records.releases.release.length;i++)
 
         /* Set background color */
         $('.spine:last').css('background-color',getRandomColor());
-
-        /* Add album covers */
-        /*if(records.releases.release[i].images.image._uri150)
-        {
-            $('.record:last').css('background-image','url("' + records.releases.release[i].images.image._uri150 + '")');
-        }
-        else
-        {
-            $('.record:last').css('background-image','url("' + records.releases.release[i].images.image[0]._uri150 + '")');
-        }*/
     }
     catch(err)
     {
@@ -80,10 +59,9 @@ $(".spine").click(function(e) {
                 + (($("#shelf").width()/2)                  //Add the xPos of the center of the shelf div
                 - (e.clientX - $("#shelf").offset().left)) //Minus the xPos of the click from the center to get the amount to shift
                 - ((spineHeight/2) - (e.clientX - $(this).offset().left)))   /*Align center of spine with center of shelf
-                                                                  (use unexpanded height because when it moves
-                                                                  it won't have the mouseover on it anymore)*/
+                                                                               (use unexpanded height because when it moves
+                                                                               it won't have the mouseover on it anymore)*/
     });
-
 
     if(infoShown == false)
     {
@@ -100,18 +78,25 @@ $(".spine").click(function(e) {
 
 function loadInfo(id)
 {
-    if(!(typeof records.releases.release[id].images.image[0] === 'undefined'))
+    if(!(typeof records.releases.release[id].images === 'undefined'))
     {
-        $(".cover").html('<img src="' + records.releases.release[id].images.image[0]._uri150 + '" />');
+        if(!(typeof records.releases.release[id].images.image[0] === 'undefined'))
+        {
+            $(".cover").html('<img src="' + records.releases.release[id].images.image[0]._uri + '" height="150" width="150" />');
 
-    }
-    else if(!(typeof records.releases.release[id].images.image === 'undefined'))
-    {
-        $(".cover").html('<img src="' + records.releases.release[id].images.image._uri150 + '" />');
+        }
+        else if(!(typeof records.releases.release[id].images.image === 'undefined'))
+        {
+            $(".cover").html('<img src="' + records.releases.release[id].images.image._uri + '" height="150" width="150" />');
+        }
+        else
+        {
+            $(".cover").html('<img src="img/noimg150.png" height="150" width="150" />');
+        }
     }
     else
     {
-        $(".cover").html('<img src="img/noimg150.png" />');
+        $(".cover").html('<img src="img/noimg150.png" height="150" width="150" />');
     }
     if(typeof records.releases.release[id].artists.artist[0] === 'undefined')
     {

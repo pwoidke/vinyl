@@ -192,7 +192,8 @@ $(".spine").css({
     top: (((spineWidth-spineHeight)/2)+"px"),
     right: (((spineWidth-spineHeight)/2)+"px"),
     marginBottom: (spineWidth+"px"),
-    marginRight: ((-1*(spineWidth-(spineHeight+3)))+"px")
+    marginRight: ((-1*(spineWidth-(spineHeight+3)))+"px"),
+    marginTop:"0px"
 });
 $(".spine").children().css({
     fontSize: (.75*spineHeight+"px"),
@@ -206,8 +207,8 @@ $(".spine").hover(function(){
         height: (1.5*spineHeight+"px"),
         top: (((spineWidth-spineHeight)/2)+(.25*spineHeight)+"px"),
         right: (((spineWidth-spineHeight)/2)-(.25*spineHeight)+"px"),
-        marginBottom: (spineWidth+"px"),
-        marginRight: ((-1*(spineWidth-(spineHeight+3)))+(.5*spineHeight)+"px")
+        marginRight: ((-1*(spineWidth-(spineHeight+3)))+(.5*spineHeight)+"px"),
+        marginTop: ((-1*spineHeight)+"px")
     });
     $(this).children().stop(true, false).animate({
         fontSize: (spineHeight+"px"),
@@ -219,8 +220,8 @@ $(".spine").hover(function(){
         height: (spineHeight+"px"),
         top: (((spineWidth-spineHeight)/2)+"px"),
         right: (((spineWidth-spineHeight)/2)+"px"),
-        marginBottom: (spineWidth+"px"),
-        marginRight: ((-1*(spineWidth-(spineHeight+3)))+"px")
+        marginRight: ((-1*(spineWidth-(spineHeight+3)))+"px"),
+        marginTop:"0px"
     });
     $(this).children().stop(true, false).animate({
         fontSize: (.75*spineHeight+"px"),

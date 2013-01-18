@@ -1,3 +1,12 @@
+/*$("#titleBar").click(function() {
+    $('.loading').fadeIn('fast');
+    var url = 'index_backend.php';
+    var data = 'type=scores';
+    $('#titleBar').load(url, data, function() {
+        $('.loading').fadeOut('slow');
+    });
+});*/
+
 if (window.XMLHttpRequest)
 {// code for IE7+, Firefox, Chrome, Opera, Safari
     xmlhttp=new XMLHttpRequest();
@@ -91,7 +100,19 @@ $(".spine").click(function(e) {
 
 function loadInfo(id)
 {
-    // TODO: Load cover
+    if(!(typeof records.releases.release[id].images.image[0] === 'undefined'))
+    {
+        $(".cover").html('<img src="' + records.releases.release[id].images.image[0]._uri150 + '" />');
+
+    }
+    else if(!(typeof records.releases.release[id].images.image === 'undefined'))
+    {
+        $(".cover").html('<img src="' + records.releases.release[id].images.image._uri150 + '" />');
+    }
+    else
+    {
+        $(".cover").html('<img src="img/noimg150.png" />');
+    }
     if(typeof records.releases.release[id].artists.artist[0] === 'undefined')
     {
         $(".artist").text('Artist: ' + records.releases.release[id].artists.artist.name);
@@ -131,8 +152,27 @@ function loadInfo(id)
             $(".format").text('Format: ' + records.releases.release[id].formats.format[0]._name + ' (' + records.releases.release[id].formats.format[0]._text + ')');
         }
     }
-    // TODO: Load multiple formats
-    // TODO: Load notes, videos, tracklist
+    if(!(typeof records.releases.release[id].notes === 'undefined'))
+    {
+        var details = htmlDecode(records.releases.release[id].notes);
+        $(".details").text('Details: ' + details);
+    }
+    else
+    {
+        $(".details").text('');
+    }
+    if(!(typeof records.releases.release[id].Collection_Notes[0] === 'undefined'))
+    {
+        var notes = htmlEncode(records.releases.release[id].Collection_Notes[0]);
+        $(".notes").text('Notes: ' + notes);
+    }
+    else
+    {
+        $(".notes").text('');
+    }
+
+    /* tracklist.track[i].position [A1] .title [All Eyes On Me] */
+    // TODO: Load details, videos, tracklist (position, title, duration if available)
 }
 
 $('.info').click(function() {
@@ -183,4 +223,14 @@ function scrollContent(direction) {
             scrollContent(direction);
         }
     });
+}
+
+function htmlEncode(value){
+    //create a in-memory div, set it's inner text(which jQuery automatically encodes)
+    //then grab the encoded contents back out.  The div never exists on the page.
+    return $('<div/>').text(value).html();
+}
+
+function htmlDecode(value){
+    return $('<div/>').html(value).text();
 }

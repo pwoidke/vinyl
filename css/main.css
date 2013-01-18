@@ -208,6 +208,11 @@ textarea {
     margin-left: 10px;
     margin-right: 10px;
     float: left;
+    border-radius: 10px;
+}
+
+.info .cover img {
+    border-radius: 10px;
 }
 
 .info .artist {
@@ -227,8 +232,12 @@ textarea {
     color: black;
 }
 
-.info .notes {
+.info .details {
     color: yellow;
+}
+
+.info .notes {
+    color: cyan;
 }
 
 .info .tracklist {

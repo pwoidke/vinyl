@@ -91,16 +91,48 @@ $(".spine").click(function(e) {
 
 function loadInfo(id)
 {
+    // TODO: Load cover
     if(typeof records.releases.release[id].artists.artist[0] === 'undefined')
     {
-        $(".artist").text(records.releases.release[id].artists.artist.name);
-        $(".title").text(records.releases.release[id].title);
+        $(".artist").text('Artist: ' + records.releases.release[id].artists.artist.name);
     }
     else
     {
-        $(".artist").text(records.releases.release[id].artists.artist[0].name);
-        $(".title").text(records.releases.release[id].title);
+        $(".artist").text('Artist: ' + records.releases.release[id].artists.artist[0].name);
     }
+    $(".title").text('Title: ' + records.releases.release[id].title);
+    if(typeof records.releases.release[id].labels.label[0] === 'undefined')
+    {
+        $(".label").text('Label: ' + records.releases.release[id].labels.label._name);
+    }
+    else
+    {
+        $(".label").text('Label: ' + records.releases.release[id].labels.label[0]._name);
+    }
+    if(typeof records.releases.release[id].formats.format[0] === 'undefined')
+    {
+        if(typeof records.releases.release[id].formats.format._text === 'undefined')
+        {
+            $(".format").text('Format: ' + records.releases.release[id].formats.format._name);
+        }
+        else
+        {
+            $(".format").text('Format: ' + records.releases.release[id].formats.format._name + ' (' + records.releases.release[id].formats.format._text + ')');
+        }
+    }
+    else
+    {
+        if(typeof records.releases.release[id].formats.format[0]._text === 'undefined')
+        {
+            $(".format").text('Format: ' + records.releases.release[id].formats.format[0]._name);
+        }
+        else
+        {
+            $(".format").text('Format: ' + records.releases.release[id].formats.format[0]._name + ' (' + records.releases.release[id].formats.format[0]._text + ')');
+        }
+    }
+    // TODO: Load multiple formats
+    // TODO: Load notes, videos, tracklist
 }
 
 $('.info').click(function() {
@@ -110,6 +142,7 @@ $('.info').click(function() {
 });
 
 var spineWidth = 600;
+//TODO: Set heights programmatically
 
 $("#shelf").css("height", (spineWidth+"px"));
 $("#records").css("height", (spineWidth+"px"));

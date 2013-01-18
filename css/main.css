@@ -166,12 +166,12 @@ textarea {
     margin-left: auto;
     margin-right: auto;
     position: relative;
-    width: 300px;
+    width: 500px;
     height: 200px;
     background: #88b7d5;
     border: 4px solid #c2e1f5;
     border-radius: 20px;
-    text-align: center;
+    text-align: left;
     opacity: 0.0;
 }
 
@@ -199,12 +199,40 @@ textarea {
     margin-left: -26px;
 }
 
+.info .cover {
+    background-color: white;
+    height: 150px;
+    width: 150px;
+    position: relative;
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    float: left;
+}
+
 .info .artist {
     color: red;
+    margin-top: 20px;
 }
 
 .info .title {
     color: green;
+}
+
+.info .label {
+    color: blue;
+}
+
+.info .format {
+    color: black;
+}
+
+.info .notes {
+    color: yellow;
+}
+
+.info .tracklist {
+    color: magenta;
 }
 
 

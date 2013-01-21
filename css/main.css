@@ -130,6 +130,7 @@ textarea {
     margin-bottom: 500px; /* = width */
     margin-right: -477px; /* = -(width - 23) */
     overflow: hidden;
+    z-index: 101;
 }
 
 .artist-title {
@@ -162,17 +163,24 @@ textarea {
     text-align: center;
 }
 
+#infoContainer {
+    width:450px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .info {
     margin-left: auto;
     margin-right: auto;
     position: relative;
-    width: 500px;
+    width: 450px;
     height: 200px;
     background: #88b7d5;
     border: 4px solid #c2e1f5;
     border-radius: 20px;
     text-align: left;
     opacity: 0.0;
+    z-index: 10;
 }
 
 .info:after, .info:before {
@@ -241,10 +249,36 @@ textarea {
     color: cyan;
 }
 
-.info .tracklist {
-    color: magenta;
+.tracklist {
+    border-radius: 20px;
+    background-color: magenta;
+    height: 208px;
+    width: 350px;
+    color: white;
+    position: absolute;
+    text-align: left;
+    z-index:1;
+    opacity: 0.0;
+    margin-left: 80px;
 }
 
+.tracklist h2 {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    position: relative;
+    top: 190px;
+    right: -160px;
+}
+
+.tracklist .tracks {
+    overflow: auto;
+    width: 230px;
+    min-height: 160px;
+    margin-left: 80px;
+    margin-top: -50px;
+    background-color: white;
+    color: black;
+}
 
 /* ==========================================================================
    Helper classes

@@ -66,7 +66,9 @@ $(".spine").click(function(e) {
     if(infoShown == false)
     {
         $("#container").animate({top:"25px"}, 500);
-        $(".info").animate({opacity:"1.0"}, 500);
+        $(".info").animate({opacity:"1.0"}, 500, function() {
+            $(".tracklist").animate({opacity:"1.0", marginLeft:"140px"}, 500);
+        });
         infoShown = true;
         loadInfo(this.id);
     }
@@ -156,14 +158,31 @@ function loadInfo(id)
         $(".notes").text('');
     }
 
+    /* Load tracks to <div.tracks><ul.tracksUL><li> */
     /* tracklist.track[i].position [A1] .title [All Eyes On Me] */
     // TODO: Load details, videos, tracklist (position, title, duration if available)
 }
 
-$('.info').click(function() {
+$(".info").click(function() {
     $("#container").animate({top:"-200px"}, 500);
     $(".info").animate({opacity:"0.0"}, 500);
+    $(".tracklist").animate({opacity:"0.0", marginLeft:"80px"}, 100);
     infoShown = false;
+});
+
+var tracksShown = false;
+
+$(".tracklist").click(function() {
+    if(tracksShown)
+    {
+        $(".tracklist").animate({marginLeft:"140px"}, 500);
+        tracksShown = false;
+    }
+    else
+    {
+        $(".tracklist").animate({marginLeft:"390px"}, 500);
+        tracksShown = true;
+    }
 });
 
 var spineWidth = 600;

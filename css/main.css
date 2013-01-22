@@ -211,7 +211,7 @@ textarea {
     height: 150px;
     width: 150px;
     position: relative;
-    margin-top: 20px;
+    margin-top: 15px;
     margin-left: 10px;
     margin-right: 10px;
     float: left;
@@ -224,7 +224,7 @@ textarea {
 
 .info .artist {
     color: red;
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
 .info .title {
@@ -243,16 +243,23 @@ textarea {
     color: yellow;
     margin-left: 10px;
     margin-right: 10px;
+    width: 270px;
+    height:50px;
+    overflow: auto;
 }
 
 .info .notes {
     color: cyan;
+    display: none;
+    clear: both;
+    margin-left: 10px;
+    margin-top: -5px;
 }
 
 .tracklist {
     border-radius: 20px;
     background-color: magenta;
-    height: 208px;
+    height: 207px;
     width: 350px;
     color: white;
     position: absolute;
@@ -273,11 +280,16 @@ textarea {
 .tracklist .tracks {
     overflow: auto;
     width: 230px;
-    min-height: 160px;
+    height: 160px;
     margin-left: 80px;
     margin-top: -50px;
     background-color: white;
     color: black;
+}
+
+.tracksUL {
+    list-style: none;
+    margin-left: -20px;
 }
 
 /* ==========================================================================

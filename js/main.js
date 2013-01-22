@@ -150,17 +150,51 @@ function loadInfo(id)
     }
     if(!(typeof records.releases.release[id].Collection_Notes[0] === 'undefined'))
     {
-        var notes = htmlEncode(records.releases.release[id].Collection_Notes[0]);
+        var notes = htmlEncode(records.releases.release[id].Collection_Notes);
+        $(".notes").css({display:"block"});
         $(".notes").text('Notes: ' + notes);
     }
     else
     {
+        $(".notes").css({display:"none"});
         $(".notes").text('');
     }
-
-    /* Load tracks to <div.tracks><ul.tracksUL><li> */
-    /* tracklist.track[i].position [A1] .title [All Eyes On Me] */
-    // TODO: Load details, videos, tracklist (position, title, duration if available)
+    $("ul.tracksUL").text('');
+    for(var i=0;i<records.releases.release[id].tracklist.__cnt;i++)
+    {
+        if(!(typeof records.releases.release[id].tracklist.track.position === 'undefined'))
+        {
+            var trackPosition = htmlEncode(records.releases.release[id].tracklist.track.position);
+        }
+        else
+        {
+            var trackPosition = htmlEncode(records.releases.release[id].tracklist.track[i].position);
+        }
+        if(!(typeof records.releases.release[id].tracklist.track.position === 'undefined'))
+        {
+            var trackTitle = htmlEncode(records.releases.release[id].tracklist.track.title);
+        }
+        else
+        {
+            var trackTitle = htmlEncode(records.releases.release[id].tracklist.track[i].title);
+        }
+        if((trackTitle != "[object Object]")&&(trackTitle != "undefined"))
+        {
+            $("ul.tracksUL").append("<li>");
+            if(trackPosition != "[object Object]")
+            {
+                $("ul.tracksUL").append(trackPosition + ": ");
+            }
+            $("ul.tracksUL").append(trackTitle);
+            if(!(typeof records.releases.release[id].tracklist.track[i].duration[0] === 'undefined'))
+            {
+                var trackDuration = htmlEncode(records.releases.release[id].tracklist.track[i].duration);
+                $("ul.tracksUL").append(" (" + trackDuration + ")");
+            }
+            $("ul.tracksUL").append("</li>");
+        }
+    }
+    // TODO: Load videos?
 }
 
 $(".info").click(function() {

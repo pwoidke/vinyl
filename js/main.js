@@ -334,8 +334,15 @@ $(".spine").hover(function(){
 var scrolling = false;
 
 $(".scroll-left").bind("mouseover", function(event) {
+    if(parseInt($("#records").css("left")) < 515)
+    {
         scrolling = true;
         scrollContent("left");
+    }
+    else
+    {
+        scrolling = false;
+    }
 }).bind("mouseout", function(event) {
     scrolling = false;
 });
@@ -348,14 +355,19 @@ $(".scroll-right").bind("mouseover", function(event) {
 });
 
 function scrollContent(direction) {
-    var amount = (direction === "right" ? "-=1px" : "+=1px");
-    $("#records").animate({
-        left: amount
-    }, 1, function() {
-        if (scrolling) {
-            scrollContent(direction);
-        }
-    });
+    if(
+        ((direction==="left")&&(parseInt($("#records").css("left"))<((parseInt($("#shelf").css("width"))/2)-10)))||((direction==="right")&&(parseInt($("#records").css("left"))>(-1*(((parseInt($("#records").css("width")))-23)-((parseInt($("#shelf").css("width")))/2)))))
+        )
+    {
+        var amount = (direction === "right" ? "-=1px" : "+=1px");
+        $("#records").animate({
+            left: amount
+        }, 1, function() {
+            if (scrolling) {
+                scrollContent(direction);
+            }
+        });
+    }
 }
 
 function htmlEncode(value){
@@ -379,5 +391,3 @@ function makePretty() {
         social_tools: false
     });
 }
-
-makePretty();

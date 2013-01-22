@@ -68,6 +68,7 @@ $(".spine").click(function(e) {
         $("#container").animate({top:"25px"}, 500);
         $(".info").animate({opacity:"1.0"}, 500, function() {
             $(".tracklist").animate({opacity:"1.0", marginLeft:"140px"}, 500);
+            $(".videolist").animate({opacity:"1.0", marginLeft:"-30px"}, 500);
         });
         infoShown = true;
         loadInfo(this.id);
@@ -84,12 +85,18 @@ function loadInfo(id)
     {
         if(!(typeof records.releases.release[id].images.image[0] === 'undefined'))
         {
-            $(".cover").html('<img src="' + records.releases.release[id].images.image[0]._uri + '" height="150" width="150" />');
-
+            $(".cover").html('<a href="' + records.releases.release[id].images.image[0]._uri + '" rel="prettyPhoto[' + records.releases.release[id].title + ']" ><img src="' + records.releases.release[id].images.image[0]._uri + '" height="150" width="150" /></a>');
+            if(records.releases.release[id].images.__cnt > 1)
+            {
+                for(var i=1;i<records.releases.release[id].images.__cnt;i++)
+                {
+                    $(".cover").append('<a href="' + records.releases.release[id].images.image[i]._uri + '" rel="prettyPhoto[' + records.releases.release[id].title + ']" ></a>');
+                }
+            }
         }
         else if(!(typeof records.releases.release[id].images.image === 'undefined'))
         {
-            $(".cover").html('<img src="' + records.releases.release[id].images.image._uri + '" height="150" width="150" />');
+            $(".cover").html('<a href="' + records.releases.release[id].images.image._uri + '" rel="prettyPhoto[' + records.releases.release[id].title + ']" ><img src="' + records.releases.release[id].images.image._uri + '" height="150" width="150" /></a>');
         }
         else
         {
@@ -170,7 +177,7 @@ function loadInfo(id)
         {
             var trackPosition = htmlEncode(records.releases.release[id].tracklist.track[i].position);
         }
-        if(!(typeof records.releases.release[id].tracklist.track.position === 'undefined'))
+        if(!(typeof records.releases.release[id].tracklist.track.title === 'undefined'))
         {
             var trackTitle = htmlEncode(records.releases.release[id].tracklist.track.title);
         }
@@ -194,14 +201,51 @@ function loadInfo(id)
             $("ul.tracksUL").append("</li>");
         }
     }
-    // TODO: Load videos?
+    $("ul.videosUL").text('');
+    if(!(typeof records.releases.release[id].videos === 'undefined'))
+    {
+        for(var i=0;i<records.releases.release[id].videos.__cnt;i++)
+        {
+            if(!(typeof records.releases.release[id].videos.video._src === 'undefined'))
+            {
+                var videoSrc = records.releases.release[id].videos.video._src;
+            }
+            else
+            {
+                var videoSrc = records.releases.release[id].videos.video[i]._src;
+            }
+
+            if(!(typeof records.releases.release[id].videos.video.title === 'undefined'))
+            {
+                var videoTitle = htmlEncode(records.releases.release[id].videos.video.title);
+            }
+            else
+            {
+                var videoTitle = htmlEncode(records.releases.release[id].videos.video[i].title);
+            }
+
+            $("ul.videosUL").append('<li><a href="' + videoSrc + '" rel="prettyPhoto" title="' + videoTitle + '">' + videoTitle + '</a></li>');
+        }
+    }
+    else
+    {
+        $("ul.videosUL").html('<li>No videos :(</li>');
+    }
+
+    makePretty();
 }
 
-$(".info").click(function() {
-    $("#container").animate({top:"-200px"}, 500);
-    $(".info").animate({opacity:"0.0"}, 500);
-    $(".tracklist").animate({opacity:"0.0", marginLeft:"80px"}, 100);
-    infoShown = false;
+$(function() {
+    $(".info").bind('click', function (e) {
+        $("#container").animate({top:"-200px"}, 500);
+        $(".info").animate({opacity:"0.0"}, 500);
+        $(".tracklist").animate({opacity:"0.0", marginLeft:"80px"}, 100);
+        $(".videolist").animate({opacity:"0.0", marginLeft:"10px"}, 100);
+        infoShown = false;
+    });
+    $(".info .cover").bind('click', function(e) {
+        //e.stopPropagation(); //TODO: Don't hide info if cover is clicked
+    });
 });
 
 var tracksShown = false;
@@ -219,10 +263,28 @@ $(".tracklist").click(function() {
     }
 });
 
+var videosShown = false;
+
+$(".videolist").click(function() {
+    if(videosShown)
+    {
+        $(".videolist").animate({marginLeft:"-30px"}, 500);
+        videosShown = false;
+    }
+    else
+    {
+        $(".videolist").animate({marginLeft:"-280px"}, 500);
+        videosShown = true;
+    }
+});
+
+
 var spineWidth = 600;
 var spineHeight = 20;
 
 $("#shelf").css("height", (spineWidth+"px"));
+$(".scroll-left").css({"height": (spineWidth+"px"), "width": ((spineWidth *.08)+"px")});
+$(".scroll-right").css({"height": (spineWidth+"px"), "width": ((spineWidth *.08)+"px")});
 $("#records").css("height", (spineWidth+"px"));
 $(".spine").css({
     width: (spineWidth+"px"),
@@ -305,3 +367,17 @@ function htmlEncode(value){
 function htmlDecode(value){
     return $('<div/>').html(value).text();
 }
+
+function makePretty() {
+    $("a[rel^='prettyPhoto']").prettyPhoto({
+        animation_speed: 'normal', /* fast/slow/normal */
+        opacity: 0.80,
+        show_title: true,
+        allow_resize: true,
+        theme: 'pp_default', /* light_rounded / dark_rounded / light_square / dark_square / facebook */
+        deeplinking: false,
+        social_tools: false
+    });
+}
+
+makePretty();

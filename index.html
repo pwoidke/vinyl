@@ -11,11 +11,12 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+
+        <link rel="stylesheet" href="css/prettyPhoto.css" />
+
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -30,11 +31,17 @@
         </div>
         <div id="infoContainer">
             <div class="tracklist">
-            <h2>Tracklist</h2>
-            <div class="tracks">
-                <ul class="tracksUL"></ul>
+                <h2>Tracklist</h2>
+                <div class="tracks">
+                    <ul class="tracksUL"></ul>
+                </div>
             </div>
-        </div>
+            <div class="videolist">
+                <h2>Videos</h2>
+                <div class="videos">
+                    <ul class="videosUL"></ul>
+                </div>
+            </div>
             <div class="info">
                 <div class="cover"></div>
                 <div class="artist"></div>
@@ -59,7 +66,8 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.3.min.js"><\/script>')</script>
         <script src="js/plugins.js"></script>
-        <script src="js/xml2json.js"></script><!-- TODO: Move to plugins.js-->
+        <script src="js/xml2json.js"></script>
+        <script src="js/prettyPhoto.js"></script>
         <script src="js/main.js"></script>
 
         <!-- TODO: Google Analytics: change UA-XXXXX-X to be your site's ID. -->

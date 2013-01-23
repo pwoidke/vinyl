@@ -347,12 +347,28 @@ $(".scroll-right").bind("mouseover", function(event) {
     scrolling = false;
 });
 
-function scrollContent(direction) {
-    if(
-        ((direction==="left")&&(parseInt($("#records").css("left"))<((parseInt($("#shelf").css("width"))/2)-10)))||((direction==="right")&&(parseInt($("#records").css("left"))>(-1*(((parseInt($("#records").css("width")))-23)-((parseInt($("#shelf").css("width")))/2)))))
-        )
+var checkKey;
+document.onkeydown = checkKey;
+
+function checkKey(e)
+{
+    e = e || window.event;
+
+    if(e.keyCode=='37')
     {
-        var amount = (direction === "right" ? "-=1px" : "+=1px");
+        scrollContent("left");
+    }
+    else if(e.keyCode=='39')
+    {
+        scrollContent("right");
+    }
+}
+
+function scrollContent(direction)
+{
+    if(((direction==="left")&&(parseInt($("#records").css("left"))<((parseInt($("#shelf").css("width"))/2)-10)))||((direction==="right")&&(parseInt($("#records").css("left"))>(-1*(((parseInt($("#records").css("width")))-23)-((parseInt($("#shelf").css("width")))/2))))))
+    {
+        var amount = (direction === "right" ? "-=2px" : "+=2px");
         $("#records").animate({
             left: amount
         }, 1, function() {

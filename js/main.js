@@ -334,15 +334,8 @@ $(".spine").hover(function(){
 var scrolling = false;
 
 $(".scroll-left").bind("mouseover", function(event) {
-    if(parseInt($("#records").css("left")) < 515)
-    {
-        scrolling = true;
-        scrollContent("left");
-    }
-    else
-    {
-        scrolling = false;
-    }
+    scrolling = true;
+    scrollContent("left");
 }).bind("mouseout", function(event) {
     scrolling = false;
 });

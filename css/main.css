@@ -94,6 +94,45 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
+#titleBar {
+    width: 170px;
+    height: 100%;
+    background-color: #a9a9a9;
+    padding-left: 30px;
+    margin-left: 15%;
+}
+
+.woodTop {
+    background: #652b00 url("../img/wood-strip-horz.png") repeat;
+    height: 15px;
+    width: 100%;
+    margin-top: -15px;;
+}
+
+.scroll-left, .scroll-right {
+    z-index: 102;
+    width: 40px;
+    height: 500px;
+    text-align: center;
+    background: #652b00 url("../img/wood-strip-vert.png") repeat;
+    color: #652b00;
+    text-shadow: #29100a 0px 1px 0, #000 0 -1px 0;
+}
+
+.scroll-left {
+    float: left;
+}
+
+.scroll-right {
+    float: right;
+}
+
+.woodBottom {
+    background: #652b00 url("../img/wood-strip-horz.png") repeat;
+    height: 30px;
+    width: 100%;
+}
+
 #container {
     position: relative;
     top: -200px;
@@ -107,6 +146,7 @@ textarea {
     position: relative;
     height: 500px;
     overflow: hidden;
+    background: #111111 url("../img/wood-dark.png") repeat;
 }
 
 #records {
@@ -140,27 +180,6 @@ textarea {
     display: inline;
     margin-right: 10px;
     margin-left: 5px;
-}
-
-.buttons {
-    z-index: 102;
-    color: black;
-}
-
-.scroll-left {
-    float: left;
-    width: 40px;
-    height: 500px;
-    background-color: white;
-    text-align: center;
-}
-
-.scroll-right {
-    float: right;
-    width: 40px;
-    height: 500px;
-    background-color: white;
-    text-align: center;
 }
 
 #infoContainer {
@@ -326,6 +345,14 @@ textarea {
 .videosUL {
     list-style: none;
     margin-left: -20px;
+}
+
+.footer {
+    width: 100%;
+    clear: both;
+    min-height: 30px;
+    background-color: #a9a9a9;
+    text-align: center;
 }
 
 /* ==========================================================================

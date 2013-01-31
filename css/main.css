@@ -94,7 +94,10 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
-#titleBar {
+
+/* Header */
+
+header {
     width: 170px;
     height: 100%;
     background-color: #a9a9a9;
@@ -102,11 +105,21 @@ textarea {
     margin-left: 15%;
 }
 
-.woodTop {
+
+/* Shelf */
+
+.woodTop, .woodBottom {
     background: #652b00 url("../img/wood-strip-horz.png") repeat;
-    height: 15px;
     width: 100%;
+}
+
+.woodTop {
+    height: 15px;
     margin-top: -15px;;
+}
+
+.woodBottom {
+    height: 30px;
 }
 
 .scroll-left, .scroll-right {
@@ -116,7 +129,7 @@ textarea {
     text-align: center;
     background: #652b00 url("../img/wood-strip-vert.png") repeat;
     color: #652b00;
-    text-shadow: #29100a 0px 1px 0, #000 0 -1px 0;
+    text-shadow: #29100a 0 1px 0, #000 0 -1px 0;
 }
 
 .scroll-left {
@@ -127,13 +140,10 @@ textarea {
     float: right;
 }
 
-.woodBottom {
-    background: #652b00 url("../img/wood-strip-horz.png") repeat;
-    height: 30px;
-    width: 100%;
-}
 
-#container {
+/* Records */
+
+.container {
     position: relative;
     top: -200px;
     margin-left: auto;
@@ -142,33 +152,36 @@ textarea {
     height: auto;
 }
 
-#shelf {
+.shelf {
     position: relative;
     height: 500px;
     overflow: hidden;
     background: #111111 url("../img/wood-dark.png") repeat;
 }
 
-#records {
+.records {
     min-width: 800px;
     height: 500px;
     overflow: hidden;
     position: relative;
-    left: 0px;
+    left: 0;
 }
 
 .spine {
+    -ms-transform:rotate(90deg);
+    -o-transform:rotate(90deg);
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
+    transform: rotate(90deg);
     position: relative;
-    top: 240px; /* = (width - 20) / 2 */
-    right: 240px; /* = (width - 20) / 2 */
+    top: 240px;
+    right: 240px;
     display: inline-block;
     background-color: black;
     width: 500px;
     height: 20px;
-    margin-bottom: 500px; /* = width */
-    margin-right: -477px; /* = -(width - 23) */
+    margin-bottom: 500px;
+    margin-right: -477px;
     overflow: hidden;
     z-index: 101;
 }
@@ -182,7 +195,10 @@ textarea {
     margin-left: 5px;
 }
 
-#infoContainer {
+
+/* Info */
+
+.infoContainer {
     width:450px;
     margin-left: auto;
     margin-right: auto;
@@ -211,6 +227,8 @@ textarea {
     position: absolute;
     pointer-events: none;
 }
+
+/* Pointer arrow inside */
 .info:after {
     border-color: rgba(136, 183, 213, 0);
     border-top-color: #88b7d5;
@@ -218,6 +236,8 @@ textarea {
     left: 50%;
     margin-left: -20px;
 }
+
+/* Pointer arrow border */
 .info:before {
     border-color: rgba(194, 225, 245, 0);
     border-top-color: #c2e1f5;
@@ -275,6 +295,9 @@ textarea {
     margin-top: -5px;
 }
 
+
+/* Tracklist */
+
 .tracklist {
     border-radius: 20px;
     background-color: magenta;
@@ -289,8 +312,11 @@ textarea {
 }
 
 .tracklist h2 {
+    -ms-transform:rotate(90deg);
+    -o-transform:rotate(90deg);
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
+    transform: rotate(90deg);
     position: relative;
     top: 190px;
     right: -160px;
@@ -311,6 +337,9 @@ textarea {
     margin-left: -20px;
 }
 
+
+/* Videos */
+
 .videolist {
     border-radius: 20px;
     background-color: cyan;
@@ -325,8 +354,11 @@ textarea {
 }
 
 .videolist h2 {
+    -ms-transform:rotate(-90deg);
+    -o-transform:rotate(-90deg);
     -webkit-transform: rotate(-90deg);
     -moz-transform: rotate(-90deg);
+    transform: rotate(-90deg);
     position: relative;
     top: -70px;
     right: 160px;
@@ -347,7 +379,10 @@ textarea {
     margin-left: -20px;
 }
 
-.footer {
+
+/* Footer */
+
+footer {
     width: 100%;
     clear: both;
     min-height: 30px;

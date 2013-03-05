@@ -22,7 +22,7 @@ xmlhttp.open("GET","data/vinyl.xml",false);
 xmlhttp.send();
 xmlDoc=xmlhttp.responseText;
 var X2JS = new X2JS();
-records = X2JS.xml_str2json( xmlDoc );
+var records = X2JS.xml_str2json( xmlDoc );
 
 
 /* INTERFACE */
@@ -49,7 +49,7 @@ for(i=0;i<records.releases.release.length;i++)
     }
     catch(err)
     {
-        console.log(err.message);
+        alert(err.message);
     }
 }
 
@@ -118,7 +118,7 @@ $('.info').click(function () {
     infoShown = false;
 });
 
-$('.tracklist').click(function() {
+$('.tracklist').click(function(e) {
     if(tracksShown)
     {
         $('.tracklist').animate({marginLeft:"140px"}, 500);
@@ -131,7 +131,7 @@ $('.tracklist').click(function() {
     }
 });
 
-$(".videolist").click(function() {
+$('.videolist').click(function() {
     if(videosShown)
     {
         $('.videolist').animate({marginLeft:"-30px"}, 500);
@@ -204,6 +204,27 @@ function checkKey(e)
     else if(e.keyCode=='39')
     {
         scrollContent("right");
+    }
+    else if((e.keyCode=='13')&&infoShown)
+    {
+        var centerID = (((-1*(parseInt($('.records').css("left"), 10) - ($('.shelf').width()/2)))-18)/23);
+        if(centerID<0)
+        {
+            loadInfo(0);
+        }
+        else
+        {
+            loadInfo(1+(parseInt(centerID)));
+        }
+        $('#'+centerID).animate({
+            backgroundColor: red
+//            left: (parseInt($('.records').css("left"), 10)                  /* Get the amount the records div is shifted left */
+//                + (($('.shelf').width()/2)                                  /* Add the xPos of the center of the shelf div */
+//                - (e.clientX - $('.shelf').offset().left))                  /* Minus the xPos of the click from the center to get the amount to shift */
+//                - ((spineHeight/2) - (e.clientX - $(this).offset().left)))  /* Align center of spine with center of shelf (use unexpanded height because when it moves it won't have the mouseover on it anymore) */
+        });
+
+
     }
 }
 
@@ -393,8 +414,6 @@ function getRandomColor()
 
 function htmlEncode(value)
 {
-    //create a in-memory div, set it's inner text(which jQuery automatically encodes)
-    //then grab the encoded contents back out.  The div never exists on the page.
     return $('<div/>').text(value).html();
 }
 

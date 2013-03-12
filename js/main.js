@@ -21,8 +21,22 @@ else
 xmlhttp.open("GET","data/vinyl.xml",false);
 xmlhttp.send();
 xmlDoc=xmlhttp.responseText;
-var X2JS = new X2JS();
-var records = X2JS.xml_str2json( xmlDoc );
+var records = x2js.xml_str2json( xmlDoc );
+
+//$.ajax({
+//    type: "GET",
+//    url: "data/vinyl.xml",
+//    dataType: "text",
+//    error: function (xhr, ajaxOptions, thrownError) {
+//        alert(xhr.status);
+//        alert(xhr.statusText);
+//        alert(thrownError)
+//    },
+//    success: function(data) {
+//        var records = x2js.xml_str2json( data );
+//        alert(records.releases.release_asArray[0].artists.artist.name);
+//    }
+//});
 
 
 /* INTERFACE */
@@ -217,7 +231,6 @@ function checkKey(e)
             loadInfo(1+(parseInt(centerID)));
         }
         $('#'+centerID).animate({
-            backgroundColor: red
 //            left: (parseInt($('.records').css("left"), 10)                  /* Get the amount the records div is shifted left */
 //                + (($('.shelf').width()/2)                                  /* Add the xPos of the center of the shelf div */
 //                - (e.clientX - $('.shelf').offset().left))                  /* Minus the xPos of the click from the center to get the amount to shift */

@@ -221,7 +221,7 @@ $(document).keydown(function (e) {
                 loadInfo(0);
             }
             else {
-                loadInfo(1 + (parseInt(centerID)));
+                loadInfo(1 + (parseInt(centerID, 10)));
             }
         }
         else {
@@ -235,7 +235,7 @@ $(document).keydown(function (e) {
                 loadInfo(0);
             }
             else {
-                loadInfo(1 + (parseInt(centerID)));
+                loadInfo(1 + (parseInt(centerID, 10)));
             }
         }
     }

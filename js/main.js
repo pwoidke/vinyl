@@ -44,6 +44,7 @@ var records = x2js.xml_str2json( xmlDoc );
 var spineWidth = 600;
 var spineHeight = 20;
 var i;
+
 /* Add artist/title to spines */
 for(i=0;i<records.releases.release.length;i++)
 {
@@ -51,11 +52,11 @@ for(i=0;i<records.releases.release.length;i++)
     {
         if(typeof records.releases.release[i].artists.artist[0] === 'undefined')
         {
-            $('.records').append('<div class="spine" id="' + i + '"><div class="artist-title">' + records.releases.release[i].artists.artist.name + ' - ' + records.releases.release[i].title + '</div></div>');
+            $('.records').append('<li class="spine" id="' + i + '"><div class="artist-title">' + records.releases.release[i].artists.artist.name + ' - ' + records.releases.release[i].title + '</div></li>');
         }
         else
         {
-            $('.records').append('<div class="spine" id="' + i + '"><div class="artist-title">' + records.releases.release[i].artists.artist[0].name + ' - ' + records.releases.release[i].title + '</div></div>');
+            $('.records').append('<li class="spine" id="' + i + '"><div class="artist-title">' + records.releases.release[i].artists.artist[0].name + ' - ' + records.releases.release[i].title + '</div></li>');
         }
 
         /* Set background color */

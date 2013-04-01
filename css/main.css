@@ -157,6 +157,8 @@ header {
     overflow: hidden;
     position: relative;
     left: 0;
+    padding: 0;
+    margin: 0;
 }
 
 .spine {
@@ -222,6 +224,7 @@ header {
 
 /* Pointer arrow inside */
 .info:after {
+    border-color:  #7BB7D5;
     border-color: rgba(136, 183, 213, 0);
     border-top-color: #88b7d5;
     border-width: 20px;
@@ -231,8 +234,8 @@ header {
 
 /* Pointer arrow border */
 .info:before {
+    border-color: #C2E1F5;
     border-color: rgba(194, 225, 245, 0);
-    border-top-color: #c2e1f5;
     border-width: 26px;
     left: 50%;
     margin-left: -26px;
@@ -496,9 +499,9 @@ footer {
 }
 
 @media print,
-       (-o-min-device-pixel-ratio: 5/4),
-       (-webkit-min-device-pixel-ratio: 1.25),
-       (min-resolution: 120dpi) {
+    (-o-min-device-pixel-ratio: 5/4),
+    (-webkit-min-device-pixel-ratio: 1.25),
+    (min-resolution: 120dpi) {
     /* Style adjustments for high resolution devices */
 }
 

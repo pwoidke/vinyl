@@ -8,90 +8,94 @@
 });*/
 
 
+var spineWidth = 600;
+var spineHeight = 20;
+
+
+var records;
+getData();
+
+
 /* DATA CONNECTION */
 
-if (window.XMLHttpRequest)
-{// code for IE7+, Firefox, Chrome, Opera, Safari
-    xmlhttp=new XMLHttpRequest();
-}
-else
-{// code for IE6, IE5
-    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-}
-xmlhttp.open("GET","data/vinyl.xml",false);
-xmlhttp.send();
-xmlDoc=xmlhttp.responseText;
-var records = x2js.xml_str2json( xmlDoc );
+function getData()
+{
+    var xmlhttp, xmlDoc;
+    if (window.XMLHttpRequest)
+    {// code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {// code for IE6, IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.open("GET","data/vinyl.xml",false);
+    xmlhttp.send();
+    xmlDoc=xmlhttp.responseText;
+    records = x2js.xml_str2json( xmlDoc );
 
-//$.ajax({
-//    type: "GET",
-//    url: "data/vinyl.xml",
-//    dataType: "text",
-//    error: function (xhr, ajaxOptions, thrownError) {
-//        alert(xhr.status);
-//        alert(xhr.statusText);
-//        alert(thrownError)
-//    },
-//    success: function(data) {
-//        var records = x2js.xml_str2json( data );
-//        alert(records.releases.release_asArray[0].artists.artist.name);
-//    }
-//});
+    buildRecords(records.releases.release.length);
+    buildUI(spineWidth, spineHeight, records.releases.release.length);
+}
 
 
 /* INTERFACE */
 
-var spineWidth = 600;
-var spineHeight = 20;
-var i;
-
-/* Add artist/title to spines */
-for(i=0;i<records.releases.release.length;i++)
+function buildRecords(length)
 {
-    try
-    {
-        if(typeof records.releases.release[i].artists.artist[0] === 'undefined')
-        {
-            $('.records').append('<li class="spine" id="' + i + '"><div class="artist-title">' + records.releases.release[i].artists.artist.name + ' - ' + records.releases.release[i].title + '</div></li>');
-        }
-        else
-        {
-            $('.records').append('<li class="spine" id="' + i + '"><div class="artist-title">' + records.releases.release[i].artists.artist[0].name + ' - ' + records.releases.release[i].title + '</div></li>');
-        }
+    var i;
 
-        /* Set background color */
-        $('.spine:last').css('background-color',getRandomColor());
-    }
-    catch(err)
+    /* Add artist/title to spines */
+    for(i=0;i<length;i++)
     {
-        alert(err.message);
+        try
+        {
+            if(typeof records.releases.release[i].artists.artist[0] === 'undefined')
+            {
+                $('.records').append('<li class="spine" id="' + i + '"><div class="artist-title">' + records.releases.release[i].artists.artist.name + ' - ' + records.releases.release[i].title + '</div></li>');
+            }
+            else
+            {
+                $('.records').append('<li class="spine" id="' + i + '"><div class="artist-title">' + records.releases.release[i].artists.artist[0].name + ' - ' + records.releases.release[i].title + '</div></li>');
+            }
+
+            /* Set background color */
+            $('.spine:last').css('background-color',getRandomColor());
+        }
+        catch(err)
+        {
+            alert(err.message);
+        }
     }
 }
 
-/* Style UI elements based on width/height of spines */
-$('.records').css({
-    width:(((records.releases.release.length * 23) + 10) + "px"),
-    height:(spineWidth+"px")
-});
-$('.shelf').css({
-    height:(spineWidth+"px")
-});
-$('.spine').css({
-    width: (spineWidth+"px"),
-    height: (spineHeight+"px"),
-    top: (((spineWidth-spineHeight)/2)+"px"),
-    right: (((spineWidth-spineHeight)/2)+"px"),
-    marginBottom: (spineWidth+"px"),
-    marginRight: ((-1*(spineWidth-(spineHeight+3)))+"px"),
-    marginTop:"0px"
-}).children().css({
-    fontSize: (0.75*spineHeight+"px"),
-    marginLeft: (0.25*spineHeight+"px")
-});
-$('.scroll-left, .scroll-right').css({
-    height: (spineWidth+"px"),
-    width: ((spineWidth *0.08)+"px")
-});
+function buildUI(spineWidth, spineHeight, length)
+{
+    /* Style UI elements based on width/height of spines */
+    $('.spine').css({
+        width: (spineWidth+"px"),
+        height: (spineHeight+"px"),
+        top: (((spineWidth-spineHeight)/2)+"px"),               //FIREFOX
+        //top: ((-1*(((spineWidth+spineHeight)/2)+3))+"px"),    //CHROME TODO: fix this
+        right: (((spineWidth-spineHeight)/2)+"px"),
+        marginBottom: (spineWidth+"px"),
+        marginRight: ((-1*(spineWidth-(spineHeight+3)))+"px")
+    }).children().css({
+        fontSize: (0.75*spineHeight+"px"),
+        marginLeft: (0.25*spineHeight+"px")
+    });
+    $('.shelf').css({
+        height:(spineWidth+"px")
+    });
+    $('.records').css({
+        width:(((length * 23) + 10) + "px"),
+        height:(spineWidth+"px")
+    });
+    $('.scroll-left, .scroll-right').css({
+        height: (spineWidth+"px"),
+        width: ((spineWidth *0.08)+"px")
+    });
+}
 
 
 /* EVENTS */
@@ -125,7 +129,7 @@ $('.spine').click(function(e) {
     }
 });
 
-$('.info').click(function () {
+$('.info').click(function () {                      //TODO: disable everything when hidden (image still links)
     $('.container').animate({top:"-200px"}, 500);
     $('.info').animate({opacity:"0.0"}, 500);
     $('.tracklist').animate({opacity:"0.0", marginLeft:"80px"}, 100);
@@ -133,7 +137,7 @@ $('.info').click(function () {
     infoShown = false;
 });
 
-$('.tracklist').click(function(e) {
+$('.tracklist').click(function() {
     if(tracksShown)
     {
         $('.tracklist').animate({marginLeft:"140px"}, 500);

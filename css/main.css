@@ -113,7 +113,7 @@ footer {
     text-align: left;
 }
 
-/* Shelf */
+
 .shelf {
 
  }
@@ -125,15 +125,6 @@ footer {
 .info {
     background-color: blue;
     text-align: center;
-}
-
-
-/* Info */
-.infoLeft, .infoRight {
-    width: 45%;
-    display: inline-block;
-    margin-top: 10px;
-    margin-bottom: 10px;
 }
 
 

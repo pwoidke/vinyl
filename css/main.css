@@ -87,305 +87,55 @@ textarea {
    ========================================================================== */
 
 
-/* Header */
-
-header {
-    width: 170px;
-    height: 100%;
-    background-color: #a9a9a9;
-    padding-left: 30px;
-    margin-left: 15%;
-}
-
-
-/* Shelf */
-
-.woodTop, .woodBottom {
-    background: #652b00 url("../img/wood-strip-horz.png") repeat;
-    width: 100%;
-}
-
-.woodTop {
-    height: 15px;
-    margin-top: -15px;;
-}
-
-.woodBottom {
-    height: 30px;
-}
-
-.scroll-left, .scroll-right {
-    z-index: 102;
-    width: 40px;
-    height: 500px;
-    text-align: center;
-    background: #652b00 url("../img/wood-strip-vert.png") repeat;
-    color: #652b00;
-    text-shadow: #29100a 0 1px 0, #000 0 -1px 0;
-}
-
-.scroll-left {
-    float: left;
-}
-
-.scroll-right {
-    float: right;
-}
-
-
-/* Records */
-
-.container {
-    position: relative;
-    top: -200px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 90%;
-    height: auto;
-}
-
-.shelf {
-    position: relative;
-    height: 500px;
-    overflow: hidden;
-    background: #111111 url("../img/wood-dark.png") repeat;
-}
-
-.records {
-    min-width: 800px;
-    height: 500px;
-    overflow: hidden;
-    position: relative;
-    left: 0;
-    padding: 0;
-    margin: 0;
-}
-
-.spine {
-    -ms-transform:rotate(90deg);
-    -o-transform:rotate(90deg);
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    transform: rotate(90deg);
-    position: relative;
-    top: 240px;
-    right: 240px;
-    display: inline-block;
-    background-color: black;
-    width: 500px;
-    height: 20px;
-    margin-bottom: 500px;
-    margin-right: -477px;
-    overflow: hidden;
-    z-index: 101;
-}
-
-.artist-title {
-    position: relative;
-    top: -3px;
-    font-size: 15px;
-    display: inline;
-    margin-right: 10px;
-    margin-left: 5px;
-}
-
-
-/* Info */
-
-.infoContainer {
-    width:450px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.info {
-    margin-left: auto;
-    margin-right: auto;
-    position: relative;
-    width: 450px;
-    height: 200px;
-    background: #88b7d5;
-    border: 4px solid #c2e1f5;
-    border-radius: 20px;
-    text-align: left;
-    opacity: 0.0;
-    z-index: 10;
-}
-
-.info:after, .info:before {
-    top: 100%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-}
-
-/* Pointer arrow inside */
-.info:after {
-    border-color:  #7BB7D5;
-    border-color: rgba(136, 183, 213, 0);
-    border-top-color: #88b7d5;
-    border-width: 20px;
-    left: 50%;
-    margin-left: -20px;
-}
-
-/* Pointer arrow border */
-.info:before {
-    border-color: #C2E1F5;
-    border-color: rgba(194, 225, 245, 0);
-    border-width: 26px;
-    left: 50%;
-    margin-left: -26px;
-}
-
-.info .cover {
-    height: 150px;
-    width: 150px;
-    position: relative;
-    margin-top: 15px;
-    margin-left: 10px;
-    margin-right: 10px;
-    float: left;
-    border-radius: 10px;
-}
-
-.info .cover img {
-    border-radius: 10px;
-}
-
-.info .artist {
-    color: red;
-    margin-top: 15px;
-}
-
-.info .title {
-    color: green;
-}
-
-.info .label {
-    color: blue;
-}
-
-.info .format {
-    color: black;
-}
-
-.info .details {
-    color: yellow;
-    margin-left: 10px;
-    margin-right: 10px;
-    width: 270px;
-    height:50px;
-    overflow: auto;
-}
-
-.info .notes {
-    color: cyan;
-    display: none;
-    clear: both;
-    margin-left: 10px;
-    margin-top: -5px;
-}
-
-
-/* Tracklist */
-
-.tracklist {
-    border-radius: 20px;
-    background-color: magenta;
-    height: 207px;
-    width: 350px;
-    color: white;
-    position: absolute;
-    text-align: left;
-    z-index:1;
-    opacity: 0.0;
-    margin-left: 80px;
-    overflow: hidden;
-}
-
-.tracklist h2 {
-    -ms-transform:rotate(90deg);
-    -o-transform:rotate(90deg);
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    transform: rotate(90deg);
-    position: relative;
-    top: 190px;
-    right: -160px;
-}
-
-.tracklist .tracks {
-    overflow: auto;
-    width: 230px;
-    height: 160px;
-    margin-left: 80px;
-    margin-top: -50px;
-    background-color: white;
-    color: black;
-}
-
-.tracksUL {
-    list-style: none;
-    margin-left: -20px;
-}
-
-
-/* Videos */
-
-.videolist {
-    border-radius: 20px;
-    background-color: cyan;
-    height: 207px;
-    width: 350px;
-    color: white;
-    position: absolute;
-    text-align: left;
-    z-index:1;
-    opacity: 0.0;
-    margin-left: 10px;
-    overflow: hidden;
-}
-
-.videolist h2 {
-    -ms-transform:rotate(-90deg);
-    -o-transform:rotate(-90deg);
-    -webkit-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);
-    transform: rotate(-90deg);
-    position: relative;
-    top: -70px;
-    right: 160px;
-}
-
-.videolist .videos {
-    overflow: auto;
-    width: 230px;
-    height: 160px;
-    margin-left: 40px;
-    margin-top: -50px;
-    background-color: white;
-    color: black;
-}
-
-.videosUL {
-    list-style: none;
-    margin-left: -20px;
-}
-
-
-/* Footer */
-
-footer {
+header, footer {
     width: 100%;
     clear: both;
     min-height: 30px;
     background-color: #a9a9a9;
     text-align: center;
 }
+
+header {
+    margin-bottom: 50px;
+}
+
+footer {
+    margin-top: 50px;
+}
+
+
+/* Page Container */
+.container {
+    background-color: red;
+    width:500px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+/* Shelf */
+.shelf {
+
+ }
+
+.spine {
+    cursor: hand;
+}
+
+.info {
+    background-color: blue;
+    text-align: center;
+}
+
+
+/* Info */
+.infoLeft, .infoRight {
+    width: 45%;
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 
 /* ==========================================================================
    Helper classes

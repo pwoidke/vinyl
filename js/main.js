@@ -68,9 +68,9 @@ function buildRecords(length)
             var item, notes, details, trackPosition, trackTitle, trackDuration, videoSrc, videoTitle;
             item = document.getElementById(i.toString());
 
-            //Add default cover image
+            //Default cover image
             $(item).find('.cover').html('<img src="img/noimg150.png" height="150" width="150" />');
-            console.log(i + ": Adding Artist to info");
+            //Artist
             if(typeof records.releases.release[i].artists.artist[0] === 'undefined')
             {
                 $(item).find('.artist').text('Artist: ' + records.releases.release[i].artists.artist.name);
@@ -218,18 +218,20 @@ function buildRecords(length)
             console.log(err.message);
         }
     }
+
+    console.log("Done.");
 }
 
 $('.spine').click(function(){
-    loadInfo(this.id);
+    loadInfo(this);
 });
 
 /* Function to load cover, tracks, and videos */
-function loadInfo(id)
+function loadInfo(item)
 {
     //Cover
-    var item, i;
-    item = document.getElementById(id);
+    var id, i;
+    id = item.id;
 
     if(!(typeof records.releases.release[id].images === 'undefined'))
     {
@@ -248,14 +250,6 @@ function loadInfo(id)
         {
             $(item).find('.cover').html('<a href="' + records.releases.release[id].images.image._uri + '" rel="prettyPhoto[' + records.releases.release[id].title + ']" ><img src="' + records.releases.release[id].images.image._uri + '" height="150" width="150" /></a>');
         }
-        else
-        {
-            $(item).find('.cover').html('<img src="img/noimg150.png" height="150" width="150" />');
-        }
-    }
-    else
-    {
-        $(item).find('.cover').html('<img src="img/noimg150.png" height="150" width="150" />');
     }
 
     makePretty();

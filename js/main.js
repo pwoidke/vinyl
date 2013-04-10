@@ -47,28 +47,30 @@ function getData()
 
 function buildRecords(length)
 {
-    var i;
+    console.log("Building records...");
+    var i, j;
 
     /* Add artist/title to spines */
     for(i=0;i<length;i++)
     {
         try
         {
-            //Artist and title on spine
+            //Add artist/title to spine
             if(typeof records.releases.release[i].artists.artist[0] === 'undefined')
             {
-                $('.records').append('<li class="spine" id="' + i + '"><h3 class="artist-title">' + records.releases.release[i].artists.artist.name + ' - ' + records.releases.release[i].title + '</h3><div class="info"><div class="cover"></div><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div></div></li>');
+                $('.records').append('<li class="spine" id="' + i + '"><h3 class="artist-title">' + records.releases.release[i].artists.artist.name + ' - ' + records.releases.release[i].title + '</h3><div class="info"><div class="cover"></div><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div><div class="tracks"><ul class="trackList"></ul></div><div class="videos"><ul class="videoList"></ul></div></div></li>');
             }
             else
             {
                 $('.records').append('<li class="spine" id="' + i + '"><h3 class="artist-title">' + records.releases.release[i].artists.artist[0].name + ' - ' + records.releases.release[i].title + '</h3><div class="info"><div class="cover"></div><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div></div></li>');
             }
 
-            //Pre-populate info
-            var notes, details, item;
-            item = document.getElementById(i);
+            var item, notes, details, trackPosition, trackTitle, trackDuration, videoSrc, videoTitle;
+            item = document.getElementById(i.toString());
 
+            //Add default cover image
             $(item).find('.cover').html('<img src="img/noimg150.png" height="150" width="150" />');
+            console.log(i + ": Adding Artist to info");
             if(typeof records.releases.release[i].artists.artist[0] === 'undefined')
             {
                 $(item).find('.artist').text('Artist: ' + records.releases.release[i].artists.artist.name);
@@ -77,6 +79,7 @@ function buildRecords(length)
             {
                 $(item).find('.artist').text('Artist: ' + records.releases.release[i].artists.artist[0].name);
             }
+            //Title
             $(item).find('.title').text('Title: ' + records.releases.release[i].title);
             //Label
             if(typeof records.releases.release[i].labels.label[0] === 'undefined')
@@ -130,10 +133,89 @@ function buildRecords(length)
             {
                 $(item).find('.notes').css({display:"none"}).text('');
             }
+            //Tracks
+            var useArr = false;
+            for(j=0;j<records.releases.release[i].tracklist.__cnt;j++)
+            {
+                if(!(typeof records.releases.release[i].tracklist.track.position === 'undefined'))
+                {
+                    trackPosition = htmlEncode(records.releases.release[i].tracklist.track.position);
+                }
+                else
+                {
+                    trackPosition = htmlEncode(records.releases.release[i].tracklist.track[j].position);
+                }
+                if(!(typeof records.releases.release[i].tracklist.track.title === 'undefined'))
+                {
+                    trackTitle = htmlEncode(records.releases.release[i].tracklist.track.title);
+                }
+                else
+                {
+                    trackTitle = htmlEncode(records.releases.release[i].tracklist.track[j].title);
+                    useArr = true;
+                }
+                if(!((typeof trackTitle === '[object Object]')||(typeof trackTitle === 'undefined')))
+                {
+                    $(item).find('ul.trackList').append("<li>");
+                    if(!(typeof trackPosition === '[object Object]'))
+                    {
+                        $(item).find('ul.trackList').append(trackPosition + ": ");
+                    }
+                    $(item).find('ul.trackList').append(trackTitle);
+                    if(useArr)
+                    {
+                        if(!(typeof records.releases.release[i].tracklist.track[j].duration[0] === 'undefined'))
+                        {
+                            trackDuration = htmlEncode(records.releases.release[i].tracklist.track[j].duration);
+                            $(item).find('ul.trackList').append(" (" + trackDuration + ")");
+                        }
+                    }
+                    else
+                    {
+                        if(!(typeof records.releases.release[i].tracklist.track.duration[0] === 'undefined'))
+                        {
+                            trackDuration = htmlEncode(records.releases.release[i].tracklist.track.duration);
+                            $(item).find('ul.trackList').append(" (" + trackDuration + ")");
+                        }
+                    }
+                    $(item).find('ul.trackList').append("</li>");
+                }
+            }
+            //Videos
+            $(item).find('ul.videoList').text('');
+            if(!(typeof records.releases.release[i].videos === 'undefined'))
+            {
+                for(j=0;j<records.releases.release[i].videos.__cnt;j++)
+                {
+                    if(!(typeof records.releases.release[i].videos.video._src === 'undefined'))
+                    {
+                        videoSrc = records.releases.release[i].videos.video._src;
+                    }
+                    else
+                    {
+                        videoSrc = records.releases.release[i].videos.video[j]._src;
+                    }
+
+                    if(!(typeof records.releases.release[i].videos.video.title === 'undefined'))
+                    {
+                        videoTitle = htmlEncode(records.releases.release[i].videos.video.title);
+                    }
+                    else
+                    {
+                        videoTitle = htmlEncode(records.releases.release[i].videos.video[j].title);
+                    }
+
+                    $(item).find('ul.videoList').append('<li><a href="' + videoSrc + '" rel="prettyPhoto" title="' + videoTitle + '">' + videoTitle + '</a></li>');
+                }
+            }
+            else
+            {
+                $(item).find('ul.videoList').html('<li>No videos :(</li>');
+            }
         }
         catch(err)
         {
-            alert(err.message);
+            console.log(err.message);
         }
     }
 }
@@ -142,10 +224,11 @@ $('.spine').click(function(){
     loadInfo(this.id);
 });
 
+/* Function to load cover, tracks, and videos */
 function loadInfo(id)
 {
     //Cover
-    var item, trackPosition, trackTitle, trackDuration, videoSrc, videoTitle, i;
+    var item, i;
     item = document.getElementById(id);
 
     if(!(typeof records.releases.release[id].images === 'undefined'))
@@ -173,73 +256,6 @@ function loadInfo(id)
     else
     {
         $(item).find('.cover').html('<img src="img/noimg150.png" height="150" width="150" />');
-    }
-    //Tracks
-    $(item).find('ul.tracksUL').text('');
-    for(i=0;i<records.releases.release[id].tracklist.__cnt;i++)
-    {
-        if(!(typeof records.releases.release[id].tracklist.track.position === 'undefined'))
-        {
-            trackPosition = htmlEncode(records.releases.release[id].tracklist.track.position);
-        }
-        else
-        {
-            trackPosition = htmlEncode(records.releases.release[id].tracklist.track[i].position);
-        }
-        if(!(typeof records.releases.release[id].tracklist.track.title === 'undefined'))
-        {
-            trackTitle = htmlEncode(records.releases.release[id].tracklist.track.title);
-        }
-        else
-        {
-            trackTitle = htmlEncode(records.releases.release[id].tracklist.track[i].title);
-        }
-        if((trackTitle != "[object Object]")&&(trackTitle != "undefined"))
-        {
-            $(item).find('ul.tracksUL').append("<li>");
-            if(trackPosition != "[object Object]")
-            {
-                $('ul.tracksUL').append(trackPosition + ": ");
-            }
-            $(item).find('ul.tracksUL').append(trackTitle);
-            if(!(typeof records.releases.release[id].tracklist.track[i].duration[0] === 'undefined'))
-            {
-                trackDuration = htmlEncode(records.releases.release[id].tracklist.track[i].duration);
-                $('ul.tracksUL').append(" (" + trackDuration + ")");
-            }
-            $(item).find('ul.tracksUL').append("</li>");
-       }
-    }
-    //Videos
-    $(item).find('ul.videosUL').text('');
-    if(!(typeof records.releases.release[id].videos === 'undefined'))
-    {
-        for(i=0;i<records.releases.release[id].videos.__cnt;i++)
-        {
-            if(!(typeof records.releases.release[id].videos.video._src === 'undefined'))
-            {
-                videoSrc = records.releases.release[id].videos.video._src;
-            }
-            else
-            {
-                videoSrc = records.releases.release[id].videos.video[i]._src;
-            }
-
-            if(!(typeof records.releases.release[id].videos.video.title === 'undefined'))
-            {
-                videoTitle = htmlEncode(records.releases.release[id].videos.video.title);
-            }
-            else
-           {
-                videoTitle = htmlEncode(records.releases.release[id].videos.video[i].title);
-            }
-
-            $(item).find('ul.videosUL').append('<li><a href="' + videoSrc + '" rel="prettyPhoto" title="' + videoTitle + '">' + videoTitle + '</a></li>');
-        }
-    }
-    else
-    {
-        $(item).find('ul.videosUL').html('<li>No videos :(</li>');
     }
 
     makePretty();

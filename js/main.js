@@ -11,8 +11,7 @@
 var spineWidth = 600;
 var spineHeight = 20;
 
-
-var records, infoShown;
+var records;
 
 getData();
 
@@ -55,6 +54,7 @@ function buildRecords(length)
     {
         try
         {
+            //Artist and title on spine
             if(typeof records.releases.release[i].artists.artist[0] === 'undefined')
             {
                 $('.records').append('<li class="spine" id="' + i + '"><h3 class="artist-title">' + records.releases.release[i].artists.artist.name + ' - ' + records.releases.release[i].title + '</h3><div class="info"><div class="cover"></div><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div></div></li>');
@@ -62,6 +62,73 @@ function buildRecords(length)
             else
             {
                 $('.records').append('<li class="spine" id="' + i + '"><h3 class="artist-title">' + records.releases.release[i].artists.artist[0].name + ' - ' + records.releases.release[i].title + '</h3><div class="info"><div class="cover"></div><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div></div></li>');
+            }
+
+            //Pre-populate info
+            var notes, details, item;
+            item = document.getElementById(i);
+
+            $(item).find('.cover').html('<img src="img/noimg150.png" height="150" width="150" />');
+            if(typeof records.releases.release[i].artists.artist[0] === 'undefined')
+            {
+                $(item).find('.artist').text('Artist: ' + records.releases.release[i].artists.artist.name);
+            }
+            else
+            {
+                $(item).find('.artist').text('Artist: ' + records.releases.release[i].artists.artist[0].name);
+            }
+            $(item).find('.title').text('Title: ' + records.releases.release[i].title);
+            //Label
+            if(typeof records.releases.release[i].labels.label[0] === 'undefined')
+            {
+                $(item).find('.label').text('Label: ' + records.releases.release[i].labels.label._name);
+            }
+            else
+            {
+                $(item).find('.label').text('Label: ' + records.releases.release[i].labels.label[0]._name);
+            }
+            //Format
+            if(typeof records.releases.release[i].formats.format[0] === 'undefined')
+            {
+                if(typeof records.releases.release[i].formats.format._text === 'undefined')
+                {
+                    $(item).find('.format').text('Format: ' + records.releases.release[i].formats.format._name);
+                }
+                else
+                {
+                    $(item).find('.format').text('Format: ' + records.releases.release[i].formats.format._name + ' (' + records.releases.release[i].formats.format._text + ')');
+                }
+            }
+            else
+            {
+                if(typeof records.releases.release[i].formats.format[0]._text === 'undefined')
+                {
+                    $(item).find('.format').text('Format: ' + records.releases.release[i].formats.format[0]._name);
+                }
+                else
+                {
+                    $(item).find('.format').text('Format: ' + records.releases.release[i].formats.format[0]._name + ' (' + records.releases.release[i].formats.format[0]._text + ')');
+                }
+            }
+            //Details
+            if(!(typeof records.releases.release[i].notes === 'undefined'))
+            {
+                details = htmlDecode(records.releases.release[i].notes);
+                $(item).find('.details').text('Details: ' + details);
+            }
+            else
+            {
+                $(item).find('.details').text('');
+            }
+            //Notes
+            if(!(typeof records.releases.release[i].Collection_Notes[0] === 'undefined'))
+            {
+                notes = htmlEncode(records.releases.release[i].Collection_Notes);
+                $(item).find('.notes').css({display:"block"}).text('Notes: ' + notes);
+            }
+            else
+            {
+                $(item).find('.notes').css({display:"none"}).text('');
             }
         }
         catch(err)
@@ -77,8 +144,9 @@ $('.spine').click(function(){
 
 function loadInfo(id)
 {
-    var notes, details, trackPosition, trackTitle, trackDuration, videoSrc, videoTitle, i;
-    var item = document.getElementById(id);
+    //Cover
+    var item, trackPosition, trackTitle, trackDuration, videoSrc, videoTitle, i;
+    item = document.getElementById(id);
 
     if(!(typeof records.releases.release[id].images === 'undefined'))
     {
@@ -106,63 +174,7 @@ function loadInfo(id)
     {
         $(item).find('.cover').html('<img src="img/noimg150.png" height="150" width="150" />');
     }
-    if(typeof records.releases.release[id].artists.artist[0] === 'undefined')
-    {
-        $(item).find('.artist').text('Artist: ' + records.releases.release[id].artists.artist.name);
-    }
-    else
-    {
-        $(item).find('.artist').text('Artist: ' + records.releases.release[id].artists.artist[0].name);
-    }
-    $(item).find('.title').text('Title: ' + records.releases.release[id].title);
-    if(typeof records.releases.release[id].labels.label[0] === 'undefined')
-    {
-        $(item).find('.label').text('Label: ' + records.releases.release[id].labels.label._name);
-    }
-    else
-    {
-        $(item).find('.label').text('Label: ' + records.releases.release[id].labels.label[0]._name);
-    }
-    if(typeof records.releases.release[id].formats.format[0] === 'undefined')
-    {
-        if(typeof records.releases.release[id].formats.format._text === 'undefined')
-        {
-            $(item).find('.format').text('Format: ' + records.releases.release[id].formats.format._name);
-        }
-        else
-        {
-            $(item).find('.format').text('Format: ' + records.releases.release[id].formats.format._name + ' (' + records.releases.release[id].formats.format._text + ')');
-        }
-    }
-    else
-    {
-        if(typeof records.releases.release[id].formats.format[0]._text === 'undefined')
-        {
-            $(item).find('.format').text('Format: ' + records.releases.release[id].formats.format[0]._name);
-        }
-        else
-        {
-            $(item).find('.format').text('Format: ' + records.releases.release[id].formats.format[0]._name + ' (' + records.releases.release[id].formats.format[0]._text + ')');
-        }
-    }
-    if(!(typeof records.releases.release[id].notes === 'undefined'))
-    {
-        details = htmlDecode(records.releases.release[id].notes);
-        $(item).find('.details').text('Details: ' + details);
-    }
-    else
-    {
-        $(item).find('.details').text('');
-    }
-    if(!(typeof records.releases.release[id].Collection_Notes[0] === 'undefined'))
-    {
-        notes = htmlEncode(records.releases.release[id].Collection_Notes);
-        $(item).find('.notes').css({display:"block"}).text('Notes: ' + notes);
-    }
-    else
-    {
-        $(item).find('.notes').css({display:"none"}).text('');
-    }
+    //Tracks
     $(item).find('ul.tracksUL').text('');
     for(i=0;i<records.releases.release[id].tracklist.__cnt;i++)
     {
@@ -198,6 +210,7 @@ function loadInfo(id)
             $(item).find('ul.tracksUL').append("</li>");
        }
     }
+    //Videos
     $(item).find('ul.videosUL').text('');
     if(!(typeof records.releases.release[id].videos === 'undefined'))
     {

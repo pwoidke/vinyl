@@ -113,6 +113,14 @@ footer {
     text-align: left;
 }
 
+[class^=sort] {
+    width:100px;
+    background-color: chartreuse;
+    display: inline-block;
+    padding: 5px;
+    margin: 10px;
+    color: black;
+}
 
 .shelf {
 

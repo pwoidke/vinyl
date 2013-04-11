@@ -219,7 +219,7 @@ function buildRecords(length)
                         videoTitle = htmlEncode(records.releases.release[i].videos.video[j].title);
                     }
 
-                    $(item).find('ul.videoList').append('<li><a href="' + videoSrc + '" rel="prettyPhoto" title="' + videoTitle + '">' + videoTitle + '</a></li>');
+                    $(item).find('ul.videoList').append('<li><a href="' + videoSrc + '" rel="prettyPhoto[' + records.releases.release[i].title + ' Videos]" title="' + videoTitle + '">' + videoTitle + '</a></li>');
                 }
             }
             else

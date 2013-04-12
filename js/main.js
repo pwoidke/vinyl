@@ -18,9 +18,6 @@
 });*/
 
 
-//var spineWidth = 600;
-//var spineHeight = 20;
-
 var records;
 
 console.log("Getting data...");
@@ -72,11 +69,11 @@ function buildRecords(length)
             //Add artist/title to spine
             if(typeof records.releases.release[i].artists.artist[0] === 'undefined')
             {
-                $('.records').append('<li class="spine" id="' + i + '"><h3 class="artist-title">' + records.releases.release[i].artists.artist.name + ' - ' + records.releases.release[i].title + '</h3><div class="info"><div class="cover"></div><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div><div class="tracks"><ul class="trackList"></ul></div><div class="videos"><ul class="videoList"></ul></div></div></li>');
+                $('.records').append('<li class="spine" id="' + i + '" style="background-color: ' + getRandomColor() + '"><h3 class="artist-title">' + records.releases.release[i].artists.artist.name + ' - ' + records.releases.release[i].title + '</h3><div class="info"><div class="cover"></div><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div><div class="tracks"><ul class="trackList"></ul></div><div class="videos"><ul class="videoList"></ul></div></div></li>');
             }
             else
             {
-                $('.records').append('<li class="spine" id="' + i + '"><h3 class="artist-title">' + records.releases.release[i].artists.artist[0].name + ' - ' + records.releases.release[i].title + '</h3><div class="info"><div class="cover"></div><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div></div></li>');
+                $('.records').append('<li class="spine" id="' + i + '" style="background-color: ' + getRandomColor() + '"><h3 class="artist-title">' + records.releases.release[i].artists.artist[0].name + ' - ' + records.releases.release[i].title + '</h3><div class="info"><div class="cover"></div><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div></div></li>');
             }
 
             var item, notes, details, trackPosition, trackTitle, trackDuration, videoSrc, videoTitle;
@@ -272,7 +269,7 @@ $('.spine').click(function(){
     loadCover(this);
 });
 
-$('[class^=sort]').click(function(){
+$('.sortID, .sortArtist, .sortTitle').click(function(){
     if(this.className.contains("ID"))
     {
         console.log("Sorting by ID");

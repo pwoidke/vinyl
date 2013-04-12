@@ -50,7 +50,7 @@ hr {
  */
 
 img {
-    vertical-align: middle;
+    /*vertical-align: middle;*/
 }
 
 /*
@@ -111,6 +111,7 @@ footer {
     margin-left: auto;
     margin-right: auto;
     text-align: left;
+    /*min-width: 190px;*/
 }
 
 .sortID, .sortArtist, .sortTitle {
@@ -135,24 +136,46 @@ footer {
 }
 
 .spine {
-    padding: 0 0 0 1em;
     margin-bottom: 2px;
 }
 
 .artist-title {
     font-size: 1em;
-    margin: 0;
+    margin: 0 1em;
 }
 
 .info {
-    background-color: blue;
     text-align: left;
     padding: 20px;
+    text-align: center;
+}
+
+.infoLeft, .infoRight {
+    display: inline-block;
+    width: 50%;
+    min-width: 175px;
+}
+
+.infoLeft {
+    text-align: center;
+}
+
+.infoRight {
+    text-align: left;
 }
 
 .trackList, .videoList {
     background-color: green;
     list-style: none;
+    text-align: left;
+}
+
+/* Smartphones (portrait and landscape) */
+@media only screen
+and (max-width : 480px) {
+    .container {
+        width:100%;
+    }
 }
 
 

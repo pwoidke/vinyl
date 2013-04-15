@@ -23,26 +23,38 @@
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
 
+        <div id="recordList">
+            <header>
+                <h1>Vinyl</h1>
+                <p>Hello world! This is Vinyl.</p>
+                <div class="searchBar">
+                    <input class="search" id="searchBar" placeholder="Search"/>
+                </div>
+                <div class="sortButtons">
+                    <div class="sortButtons">
+                        <div class="sort" data-sort="artist">Sort by Artist</div>
+                        <div class="sort" data-sort="title">Sort by Title</div>
+                    </div>
+                    <div class="sortButtons">
+                        <div class="sort" data-sort="label">Sort by Label</div>
+                        <div class="sort" data-sort="format">Sort by Format</div>
+                    </div>
+                </div>
+            </header>
 
-        <header>
-            <h1>Vinyl</h1>
-            <p>Hello world! This is Vinyl.</p>
-            <div class="sortID">Sort by ID</div>
-            <div class="sortArtist">Sort by Arist</div>
-            <div class="sortTitle">Sort by Title</div>
-            <!--<img class="loading" src="img/loading.gif" style="display:none" />-->
-        </header>
-
-        <div class="container">
-            <div class="shelf">
-                <ol class="records"></ol>
+            <div class="container">
+                <div class="loading">
+                    <img src="img/loading.gif">
+                </div>
+                <div class="shelf">
+                    <ol class="records list"></ol>
+                </div>
             </div>
+
+            <footer>
+                enjoy.
+            </footer>
         </div>
-
-        <footer>
-            enjoy.
-        </footer>
-
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
@@ -51,6 +63,7 @@
         <script src="js/plugins.js"></script>
         <script src="js/xml2json.js"></script>
         <script src="js/prettyPhoto.js"></script>
+        <script src="js/list.js"></script>
         <script src="js/main.js"></script>
 
         <!-- TODO: Google Analytics: change UA-XXXXX-X to be your site's ID. -->

@@ -3,11 +3,14 @@
    ========================================================================== */
 
 html,
-button,
-input,
-select,
-textarea {
+button {
     color: #ffffff;
+}
+
+select,
+textarea,
+input {
+    color: #000000;
 }
 
 body {
@@ -105,6 +108,10 @@ footer {
 
 
 /* Page Container */
+#recordList {
+    min-width: 200px;
+}
+
 .container {
     background-color: black;
     width:61.8%;
@@ -114,16 +121,29 @@ footer {
     /*min-width: 190px;*/
 }
 
-.sortID, .sortArtist, .sortTitle {
-    width:100px;
+.loading {
+    width: 100%;
+    background-color: #333333;
+    text-align: center;
+}
+
+.searchBar, .sort {
+    min-width:100px;
     background-color: chartreuse;
     display: inline-block;
     padding: 5px;
     margin: 10px;
     color: black;
+    border-radius: 10px;
+}
+
+.sort {
     cursor: hand;
     cursor: pointer;
-    border-radius: 10px;
+}
+
+.sortButtons {
+    display: inline-block;
 }
 
 .shelf {

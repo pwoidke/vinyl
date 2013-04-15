@@ -248,7 +248,7 @@ $(document).ready(function(){
         {
             if(!(typeof records.releases.release[id].images.image[0] === 'undefined'))
             {
-                $(item).find('.cover').html('<a href="' + records.releases.release[id].images.image[0]._uri + '" rel="prettyPhoto[' + records.releases.release[id].title + ']" ><img src="' + records.releases.release[id].images.image[0]._uri + '" height="150" width="150" /></a>');
+                $(item).find('.cover').html('<a href="' + records.releases.release[id].images.image[0]._uri + '" rel="prettyPhoto[' + records.releases.release[id].title + ']" ><img src="' + records.releases.release[id].images.image[0]._uri150 + '" height="150" width="150" /></a>');
                 if(records.releases.release[id].images.__cnt > 1)
                 {
                     for(i=1;i<records.releases.release[id].images.__cnt;i++)
@@ -259,7 +259,7 @@ $(document).ready(function(){
             }
             else if(!(typeof records.releases.release[id].images.image === 'undefined'))
             {
-                $(item).find('.cover').html('<a href="' + records.releases.release[id].images.image._uri + '" rel="prettyPhoto[' + records.releases.release[id].title + ']" ><img src="' + records.releases.release[id].images.image._uri + '" height="150" width="150" /></a>');
+                $(item).find('.cover').html('<a href="' + records.releases.release[id].images.image._uri + '" rel="prettyPhoto[' + records.releases.release[id].title + ']" ><img src="' + records.releases.release[id].images.image._uri150 + '" height="150" width="150" /></a>');
             }
         }
 

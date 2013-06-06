@@ -2,22 +2,37 @@ $(document).ready(function(){
 
     var records;
 
-    console.log("Getting data...");
-    records = getData();
-    console.log("Building records...");
-    buildRecords(records.releases.release.length);
-    console.log("Building list...");
-    buildList();
-    console.log("Loading complete.");
+    if(localDataExists())
+    {
+        console.log("Getting local data...");
+        var xmlDoc = $.jStorage.get("vinyl");
+        records = x2js.xml_str2json( xmlDoc );
+    }
+    else
+    {
+        records = getData();
+    }
+    console.log("Done.");
+    build();
     doneLoading();
-
-
 
 
     /* DATA CONNECTION */
 
+    function localDataExists()
+    {
+        if($.jStorage.index().length <= 0)
+        {
+            $.jStorage.flush();
+            return false;
+        }
+        return true;
+    }
+
+    //TODO: In the future, change this to just show an upload file dialog (no initial data)
     function getData()
     {
+        console.log("Getting data...");
         var xmlhttp, xmlDoc;
         if (window.XMLHttpRequest)
         {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -30,13 +45,31 @@ $(document).ready(function(){
         xmlhttp.open("GET","data/vinyl.xml",false);
         xmlhttp.send();
         xmlDoc=xmlhttp.responseText;
-        var records = x2js.xml_str2json( xmlDoc );
-        console.log("Done.");
+        $.jStorage.set("vinyl", xmlDoc);
+        records = x2js.xml_str2json( xmlDoc );
         return records;
     }
 
 
     /* INTERFACE */
+
+    function build()
+    {
+        console.log("Building records...");
+        try
+        {
+            buildRecords(records.releases.release.length);
+        }
+        catch(err)
+        {
+            console.log(err.message);
+            records = getData();
+            buildRecords(records.releases.release.length);
+        }
+        console.log("Building list...");
+        buildList();
+        console.log("Loading complete.");
+    }
 
     $('.records').accordion({
         header: "h3",
@@ -47,7 +80,9 @@ $(document).ready(function(){
 
     function buildRecords(length)
     {
-        var i, j;
+        var i, j, item, notes, details, trackPosition, trackTitle, trackDuration, videoSrc, videoTitle, useArr;
+
+        $('ol.records').empty();
 
         /* Add artist/title to spines */
         for(i=0;i<length;i++)
@@ -64,7 +99,6 @@ $(document).ready(function(){
                     $('.records').append('<li class="spine" id="' + i + '" style="background-color: ' + getRandomColor() + '"><h3 class="artist-title">' + records.releases.release[i].artists.artist[0].name + ' - ' + records.releases.release[i].title + '</h3><div class="info"><div class="infoLeft"><div class="cover"></div></div><div class="infoRight"><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div></div></div></li>');
                 }
 
-                var item, notes, details, trackPosition, trackTitle, trackDuration, videoSrc, videoTitle;
                 item = document.getElementById(i.toString());
 
                 //Default cover image
@@ -133,7 +167,7 @@ $(document).ready(function(){
                     $(item).find('.notes').css({display:"none"}).text('');
                 }
                 //Tracks
-                var useArr = false;
+                useArr = false;
                 for(j=0;j<records.releases.release[i].tracklist.__cnt;j++)
                 {
                     if(!(typeof records.releases.release[i].tracklist.track.position === 'undefined'))
@@ -254,10 +288,30 @@ $(document).ready(function(){
         $('.loading').hide('slow');
     }
 
+
     /* EVENTS */
 
     $('.spine').click(function(){
         loadCover(this);
+    });
+
+    //TODO: Add loading spinner to file upload
+    $('#uploadFile').change(function(){
+        console.log("Uploading new data file...");
+        var file, reader;
+        file=document.getElementById("uploadFile").files[0];
+        reader=new FileReader();
+
+        reader.onload = function(e) {
+            $.jStorage.set("vinyl", e.target.result);
+            if($.jStorage.get("vinyl") != null)
+            {
+                console.log("Done.");
+                document.location.reload();
+            }
+        }
+
+        reader.readAsText(file);
     });
 
 
@@ -292,11 +346,12 @@ $(document).ready(function(){
     }
 
     function buildList() {
-        var options = {
+        var options, recordList;
+        options = {
             valueNames: [ 'artist', 'title', 'label', 'format' ],
             page: 500
         };
-        var recordList = new List('recordList', options);
+        recordList = new List('recordList', options);
         console.log("Done.");
     }
 

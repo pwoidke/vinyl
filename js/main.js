@@ -4,7 +4,7 @@ function RecordObj()
     this.Title      = 		"(No Title)";
     this.Label      = 		"(None)";
     this.Format     = 		"(None)";
-    this.Cover      =		"img/noimg150.png";
+    this.Cover      =		[];
     this.Details    =		"";
     this.Notes      =		"";
     this.Tracks     =		[];
@@ -22,6 +22,12 @@ function VideoObj()
 {
     this.URL        =       null;
     this.Title      =       null;
+}
+
+function CoverObj()
+{
+    this.URI        =       "img/noimg150.png";
+    this.URI150     =       "img/noimg150.png";
 }
 
 $(document).ready(function(){
@@ -81,13 +87,13 @@ $(document).ready(function(){
         console.log("Building records...");
         try
         {
-            buildRecords(records.releases.release.length);
+            records = buildRecords(records.releases.release.length);
         }
         catch(err)
         {
             console.log(err.message);
             records = getData();
-            buildRecords(records.releases.release.length);
+            records = buildRecords(records.releases.release.length);
         }
         console.log("Building list...");
         buildList();
@@ -102,7 +108,7 @@ $(document).ready(function(){
     });
 
     function buildRecords(length) {
-        var i, j, item, notes, details, Record, nextTrack, nextVideo;
+        var i, j, item, notes, details, Record, nextTrack, nextVideo, nextCover, Records = [];
 
         $('ol.records').empty();
 
@@ -233,6 +239,37 @@ $(document).ready(function(){
                     }
                 }
 
+                //Cover
+                nextCover = new CoverObj();
+                if(typeof records.releases.release[i].images !== 'undefined')
+                {
+                    if (typeof records.releases.release[i].images.image[0] !== 'undefined')
+                    {
+                        for(j=0;j<records.releases.release[i].images.__cnt;j++)
+                        {
+                            nextCover.URI = records.releases.release[i].images.image[j]._uri;
+                            nextCover.URI150 = records.releases.release[i].images.image[j]._uri150;
+
+                            Record.Cover.push(nextCover);
+                            nextCover = new CoverObj();
+                        }
+                    }
+                    else if(typeof records.releases.release[i].images.image !== 'undefined')
+                    {
+                        nextCover.URI = records.releases.release[i].images.image._uri;
+                        nextCover.URI150 = records.releases.release[i].images.image._uri150;
+
+                        Record.Cover.push(nextCover);
+                    }
+                    else
+                    {
+                        Record.Cover.push(nextCover);
+                    }
+                }
+                else
+                {
+                    Record.Cover.push(nextCover);
+                }
 
                 //Add artist/title to spine
                 $('.records').append('<li class="spine" id="' + i + '" style="background-color: ' + getRandomColor() + '"><h3 class="artist-title">' + Record.Artist + ' - ' + Record.Title + '</h3><div class="info"><div class="infoLeft"><div class="cover"></div></div><div class="infoRight"><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div></div><div class="tracks"><ul class="trackList"><li>No track information :(</li></ul></div><div class="videos"><ul class="videoList"><li>No videos :(</li></ul></div></div></li>');
@@ -283,7 +320,6 @@ $(document).ready(function(){
                 }
 
                 //Videos
-
                 if(Record.Videos.length > 0)
                 {
                     $(item).find('ul.videoList').text('');
@@ -291,6 +327,8 @@ $(document).ready(function(){
                         $(item).find('ul.videoList').append('<li><a href="' + video.URL + '" rel="prettyPhoto[' + Record.Title + ' Videos]" title="' + video.Title + '">' + video.Title + '</a></li>');
                     });
                 }
+
+                Records.push(Record);
             }
             catch(err)
             {
@@ -299,6 +337,7 @@ $(document).ready(function(){
         }
 
         console.log("Done.");
+        return Records;
     }
 
     /* Function to load cover, tracks, and videos */
@@ -307,23 +346,11 @@ $(document).ready(function(){
         var id, i;
         id = item.id;
 
-        if(!(typeof records.releases.release[id].images === 'undefined'))
+        $(item).find('.cover').html('<a href="' + records[id].Cover[0].URI + '" rel="prettyPhoto[' + records[id].Title + ']" ><img src="' + records[id].Cover[0].URI150 + '" height="150" width="150" /></a>');
+
+        for(i=1;i<records[id].Cover.length;i++)
         {
-            if(!(typeof records.releases.release[id].images.image[0] === 'undefined'))
-            {
-                $(item).find('.cover').html('<a href="' + records.releases.release[id].images.image[0]._uri + '" rel="prettyPhoto[' + records.releases.release[id].title + ']" ><img src="' + records.releases.release[id].images.image[0]._uri150 + '" height="150" width="150" /></a>');
-                if(records.releases.release[id].images.__cnt > 1)
-                {
-                    for(i=1;i<records.releases.release[id].images.__cnt;i++)
-                    {
-                        $(item).find('.cover').append('<a href="' + records.releases.release[id].images.image[i]._uri + '" rel="prettyPhoto[' + records.releases.release[id].title + ']" ></a>');
-                    }
-                }
-            }
-            else if(!(typeof records.releases.release[id].images.image === 'undefined'))
-            {
-                $(item).find('.cover').html('<a href="' + records.releases.release[id].images.image._uri + '" rel="prettyPhoto[' + records.releases.release[id].title + ']" ><img src="' + records.releases.release[id].images.image._uri150 + '" height="150" width="150" /></a>');
-            }
+            $(item).find('.cover').append('<a href="' + records[id].Cover[i].URI + '" rel="prettyPhoto[' + records[id].Title + ']" ></a>');
         }
 
         makePretty();

@@ -1,5 +1,8 @@
-function RecordObj()
-{
+
+var Record = function(id) {
+    //State
+    this.id         =       id;
+    this.spine      =       $('#' + this.id + '.spine');
     this.Artist     =		"(No Artist)";
     this.Title      = 		"(No Title)";
     this.Label      = 		"(None)";
@@ -9,35 +12,113 @@ function RecordObj()
     this.Notes      =		"";
     this.Tracks     =		[];
     this.Videos     =		[];
-}
+};
 
-function TrackObj()
-{
+Record.prototype = function() {
+    //Private
+    var createHTML = function(id) {
+            $('.records').append('<li class="spine" id="' + id + '" style="background-color: ' + 'rgb(' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ')' + '"><h3 class="artist-title"></h3><div class="info"><div class="infoLeft"><div class="cover"></div></div><div class="infoRight"><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div></div><div class="tracks"><ul class="trackList"><li>No track information :(</li></ul></div><div class="videos"><ul class="videoList"><li>No videos :(</li></ul></div></div></li>');
+        },
+
+        setArtistTitle = function () {
+            $('#' + this.id + '.spine .artist-title').html(this.Artist + " - " + this.Title);
+        },
+
+        setInfo = function() {
+            var item = document.getElementById(this.id.toString());
+            item.Title = this.Title;
+
+            //Add cover image
+            $(item).find('.cover').html('<img src="' + this.Cover + '" height="150" width="150" />');
+
+            //Artist
+            $(item).find('.artist').text('Artist: ' + this.Artist);
+
+            //Title
+            $(item).find('.title').text('Title: ' + this.Title);
+
+            //Label
+            $(item).find('.label').text('Label: ' + this.Label);
+
+            //Format
+            $(item).find('.format').text('Format: ' + this.Format);
+
+            //Details
+            if(this.Details.length > 0)
+            {
+                $(item).find('.details').text('Details: ' + this.Details);
+            }
+
+            //Notes
+            if(this.Notes.length > 0)
+            {
+                $(item).find('.notes').css({display:"block"}).text('Notes: ' + this.Notes);
+            }
+
+            //Tracks
+            if(this.Tracks.length > 0)
+            {
+                $(item).find('ul.trackList').text('');
+                _.each(this.Tracks, function(track){
+                    $(item).find('ul.trackList').append("<li>");
+                    if(track.Position)
+                    {
+                        $(item).find('ul.trackList').append(track.Position + ": ");
+                    }
+                    if(track.Title)
+                    {
+                        $(item).find('ul.trackList').append(track.Title);
+                    }
+                    if(track.Duration)
+                    {
+                        $(item).find('ul.trackList').append(" (" + track.Duration + ")");
+                    }
+                    $(item).find('ul.trackList').append("</li>");
+                });
+            }
+
+            //Videos
+            if(this.Videos.length > 0)
+            {
+                $(item).find('ul.videoList').text('');
+                _.each(this.Videos, function(video){
+                    $(item).find('ul.videoList').append('<li><a href="' + video.URL + '" rel="prettyPhoto[' + item.Title + ' Videos]" title="' + video.Title + '">' + video.Title + '</a></li>');
+                });
+            }
+        };
+
+    //Public
+    return {
+        createHTML: createHTML,
+        setArtistTitle: setArtistTitle,
+        setInfo: setInfo
+    };
+}();
+
+function TrackObj() {
     this.Position   =       null;
     this.Title      =       null;
     this.Duration   =       null;
 }
 
-function VideoObj()
-{
+function VideoObj() {
     this.URL        =       null;
     this.Title      =       null;
 }
 
-function CoverObj()
-{
+function CoverObj() {
     this.URI        =       "img/noimg150.png";
     this.URI150     =       "img/noimg150.png";
 }
 
-$(document).ready(function(){
+$(document).ready(function() {
 
-    var records;
+    var xmlDoc, records;
 
     if(localDataExists())
     {
         console.log("Getting local data...");
-        var xmlDoc = $.jStorage.get("vinyl");
+        xmlDoc = $.jStorage.get("vinyl");
         records = x2js.xml_str2json( xmlDoc );
     }
     else
@@ -107,67 +188,83 @@ $(document).ready(function(){
         active: false
     });
 
+    function AddRecord(id) {
+        var record = new Record(id);
+        record.createHTML(id);
+        return record;
+    }
+
     function buildRecords(length) {
-        var i, j, item, notes, details, Record, nextTrack, nextVideo, nextCover, Records = [];
+        var i, j, Record, nextTrack, nextVideo, nextCover, Records = [];
 
         $('ol.records').empty();
 
-        /* Add artist/title to spines */
+        /* Add records to list */
         for(i=0;i<length;i++)
         {
             try
             {
-                Record = new RecordObj();
+                Record = new AddRecord(i);
+
+                /* Set object properties */
 
                 //Artist
-                if(typeof records.releases.release[i].artists.artist !== 'undefined')
+                if(typeof records.releases.release[i].artists.artist.name === 'string')
                 {
                     Record.Artist = records.releases.release[i].artists.artist.name;
                 }
-                else if(typeof records.releases.release[i].artists.artist[0] !== 'undefined')
+                else if(typeof records.releases.release[i].artists.artist[0].name === 'string')
                 {
-                    Record.Artist = _.reduce(records.releases.release[i].artists.artist, function(artist){ return artist.name + ", "; });
+                    Record.Artist = records.releases.release[i].artists.artist[0].name;
+//TODO:                    Record.Artist = _.reduce(records.releases.release[i].artists.artist, function(artist){ return artist.name + ", "; });
                 }
+                else { console.log('Error: Artist'); }
 
                 //Title
-                if(typeof records.releases.release[i].title !== 'undefined')
+                if(typeof records.releases.release[i].title === 'string')
                 {
                     Record.Title = records.releases.release[i].title;
                 }
+                else { console.log('Error: Title'); }
 
                 //Label
-                if(typeof records.releases.release[i].labels.label !== 'undefined')
+                if(typeof records.releases.release[i].labels.label._name === 'string')
                 {
                     Record.Label = records.releases.release[i].labels.label._name;
                 }
-                else if(typeof records.releases.release[i].labels.label[0] !== 'undefined')
+                else if(typeof records.releases.release[i].labels.label[0]._name === 'string')
                 {
-                    Record.Label = _.reduce(records.releases.release[i].labels.label, function(label){ return label._name + ", "; });
+                    Record.Label = records.releases.release[i].labels.label[0]._name;
+//TODO:                    Record.Label = _.reduce(records.releases.release[i].labels.label, function(label){ return label._name + ", "; });
                 }
+                else { console.log('Error: Label'); }
 
                 //Format
                 if(typeof records.releases.release[i].formats.format !== 'undefined')
                 {
-                    if(typeof records.releases.release[i].formats.format._text === 'undefined')
-                    {
-                        Record.Format = records.releases.release[i].formats.format._name;
-                    }
-                    else
+                    if(typeof records.releases.release[i].formats.format._text === 'string')
                     {
                         Record.Format = records.releases.release[i].formats.format._name + " (" + records.releases.release[i].formats.format._text + ")";
+                    }
+                    else if(typeof records.releases.release[i].formats.format._name === 'string')
+                    {
+                        Record.Format = records.releases.release[i].formats.format._name;
                     }
                 }
                 else if(typeof records.releases.release[i].formats.format[0] !== 'undefined')
                 {
-                    if(typeof records.releases.release[i].formats.format[0]._text === 'undefined')
+                    if(typeof records.releases.release[i].formats.format[0]._text === 'string')
                     {
-                        Record.Format = _.reduce(records.releases.release[i].formats.format, function(format){ return format._name + ", "});
+                        Record.Format = records.releases.release[i].formats.format[0]._name + " (" + records.releases.release[i].formats.format[0]._text + ")";
+//TODO:                        Record.Format = _.reduce(records.releases.release[i].formats.format, function(format){ return format._name +  " (" + format._text + ")" + ", "; });
                     }
-                    else
+                    else if(typeof records.releases.release[i].formats.format[0]._name === 'string')
                     {
-                        Record.Format = _.reduce(records.releases.release[i].formats.format, function(format){ return format._name +  " (" + format._text + ")" + ", "});
+                        Record.Format = records.releases.release[i].formats.format[0]._name
+//TODO:                        Record.Format = _.reduce(records.releases.release[i].formats.format, function(format){ return format._name + ", "; });
                     }
                 }
+                else { console.log('Error: Format'); }
 
                 //Details
                 if(typeof records.releases.release[i].notes !== 'undefined')
@@ -176,13 +273,14 @@ $(document).ready(function(){
                 }
 
                 //Notes
-                if(typeof records.releases.release[i].Collection_Notes !== 'undefined')
+                if(typeof records.releases.release[i].Collection_Notes === 'string')
                 {
                     Record.Notes = htmlDecode(records.releases.release[i].Collection_Notes);
                 }
-                else if(typeof records.releases.release[i].Collection_Notes[0] !== 'undefined')
+                else if(typeof records.releases.release[i].Collection_Notes[0] === 'string')
                 {
-                    Record.Notes = _.reduce(records.releases.release[i].Collection_Notes, function(notes){ return htmlDecode(notes) + " "; });
+                    Record.Notes = records.releases.release[i].Collection_Notes[0];
+//TODO:                    Record.Notes = _.reduce(records.releases.release[i].Collection_Notes, function(notes){ return htmlDecode(notes) + " "; });
                 }
 
                 //Tracks
@@ -192,27 +290,49 @@ $(document).ready(function(){
 
                     if(typeof records.releases.release[i].tracklist.track.title !== 'undefined')
                     {
-                        nextTrack.Position = htmlEncode(records.releases.release[i].tracklist.track.position);
-                        nextTrack.Title = htmlEncode(records.releases.release[i].tracklist.track.title);
+                        if(typeof records.releases.release[i].tracklist.track.position !== 'object')
+                        {
+                            nextTrack.Position = _.escape(records.releases.release[i].tracklist.track.position);
+                            nextTrack.Title = _.escape(records.releases.release[i].tracklist.track.title);
+                        }
+                        else
+                        {
+                            nextTrack.Title = "<b>" + _.escape(records.releases.release[i].tracklist.track.title) + "</b>";
+                        }
                     }
                     else if((typeof records.releases.release[i].tracklist.track[j].title !== 'undefined') && (typeof records.releases.release[i].tracklist.track[j].title !== 'object'))
                     {
-                        nextTrack.Position = htmlEncode(records.releases.release[i].tracklist.track[j].position);
-                        nextTrack.Title = htmlEncode(records.releases.release[i].tracklist.track[j].title);
+                        if(typeof records.releases.release[i].tracklist.track[j].position !== 'object')
+                        {
+                            nextTrack.Position = _.escape(records.releases.release[i].tracklist.track[j].position);
+                            nextTrack.Title = _.escape(records.releases.release[i].tracklist.track[j].title);
+                        }
+                        else
+                        {
+                            nextTrack.Title = "<b>" + _.escape(records.releases.release[i].tracklist.track[j].title) + "</b>";
+                        }
                         if(typeof records.releases.release[i].tracklist.track[j].duration !== 'object')
                         {
-                            nextTrack.Duration = htmlEncode(records.releases.release[i].tracklist.track[j].duration);
+                            nextTrack.Duration = _.escape(records.releases.release[i].tracklist.track[j].duration);
                         }
                     }
                     else if(typeof records.releases.release[i].tracklist.track.title !== 'object')
                     {
-                        nextTrack.Position = htmlEncode(records.releases.release[i].tracklist.track.position);
-                        nextTrack.Title = htmlEncode(records.releases.release[i].tracklist.track.title);
+                        if(typeof records.releases.release[i].tracklist.track.position !== 'object')
+                        {
+                            nextTrack.Position = _.escape(records.releases.release[i].tracklist.track.position);
+                            nextTrack.Title = _.escape(records.releases.release[i].tracklist.track.title);
+                        }
+                        else
+                        {
+                            nextTrack.Title = "<b>" + _.escape(records.releases.release[i].tracklist.track.title) + "</b>";
+                        }
                         if(typeof records.releases.release[i].tracklist.track[j].duration !== 'object')
                         {
-                            nextTrack.Duration = htmlEncode(records.releases.release[i].tracklist.track.duration);
+                            nextTrack.Duration = _.escape(records.releases.release[i].tracklist.track.duration);
                         }
                     }
+                    else { console.log('Error: Track'); }
 
                     Record.Tracks.push(nextTrack);
                 }
@@ -227,13 +347,14 @@ $(document).ready(function(){
                         if(typeof records.releases.release[i].videos.video.title === 'undefined')
                         {
                             nextVideo.URL = records.releases.release[i].videos.video[j]._src;
-                            nextVideo.Title = htmlEncode(records.releases.release[i].videos.video[j].title);
+                            nextVideo.Title = _.escape(records.releases.release[i].videos.video[j].title);
                         }
-                        else
+                        else if(typeof records.releases.release[i].videos.video[j] === 'undefined')
                         {
                             nextVideo.URL = records.releases.release[i].videos.video._src;
-                            nextVideo.Title = htmlEncode(records.releases.release[i].videos.video.title);
+                            nextVideo.Title = _.escape(records.releases.release[i].videos.video.title);
                         }
+                        else { console.log('Error: Video'); }
 
                         Record.Videos.push(nextVideo);
                     }
@@ -272,61 +393,10 @@ $(document).ready(function(){
                 }
 
                 //Add artist/title to spine
-                $('.records').append('<li class="spine" id="' + i + '" style="background-color: ' + getRandomColor() + '"><h3 class="artist-title">' + Record.Artist + ' - ' + Record.Title + '</h3><div class="info"><div class="infoLeft"><div class="cover"></div></div><div class="infoRight"><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div></div><div class="tracks"><ul class="trackList"><li>No track information :(</li></ul></div><div class="videos"><ul class="videoList"><li>No videos :(</li></ul></div></div></li>');
+                Record.setArtistTitle();
 
-                item = document.getElementById(i.toString());
-
-                //Add cover image
-                $(item).find('.cover').html('<img src="' + Record.Cover + '" height="150" width="150" />');
-
-                //Artist
-                $(item).find('.artist').text('Artist: ' + Record.Artist);
-
-                //Title
-                $(item).find('.title').text('Title: ' + Record.Title);
-
-                //Label
-                $(item).find('.label').text('Label: ' + Record.Label);
-
-                //Format
-                $(item).find('.format').text('Format: ' + Record.Format);
-
-                //Details
-                $(item).find('.details').text('Details: ' + Record.Details);
-
-                //Notes
-                $(item).find('.notes').css({display:"block"}).text('Notes: ' + Record.Notes);
-
-                //Tracks
-                if(Record.Tracks.length > 0)
-                {
-                    $(item).find('ul.trackList').text('');
-                    _.each(Record.Tracks, function(track){
-                        $(item).find('ul.trackList').append("<li>");
-                        if(track.Position)
-                        {
-                            $(item).find('ul.trackList').append(track.Position + ": ");
-                        }
-                        if(track.Title)
-                        {
-                            $(item).find('ul.trackList').append(track.Title);
-                        }
-                        if(track.Duration)
-                        {
-                            $(item).find('ul.trackList').append(" (" + track.Duration + ")");
-                        }
-                        $(item).find('ul.trackList').append("</li>");
-                    });
-                }
-
-                //Videos
-                if(Record.Videos.length > 0)
-                {
-                    $(item).find('ul.videoList').text('');
-                    _.each(Record.Videos, function(video){
-                        $(item).find('ul.videoList').append('<li><a href="' + video.URL + '" rel="prettyPhoto[' + Record.Title + ' Videos]" title="' + video.Title + '">' + video.Title + '</a></li>');
-                    });
-                }
+                //Set record info
+                Record.setInfo();
 
                 Records.push(Record);
             }
@@ -353,55 +423,6 @@ $(document).ready(function(){
             $(item).find('.cover').append('<a href="' + records[id].Cover[i].URI + '" rel="prettyPhoto[' + records[id].Title + ']" ></a>');
         }
 
-        makePretty();
-    }
-
-    function doneLoading() {
-        $('.loading').hide('slow');
-    }
-
-
-    /* EVENTS */
-
-    $('.spine').click(function(){
-        loadCover(this);
-    });
-
-    //TODO: Add loading spinner to file upload
-    $('#uploadFile').change(function(){
-        console.log("Uploading new data file...");
-        var file, reader;
-        file=document.getElementById("uploadFile").files[0];
-        reader=new FileReader();
-
-        reader.onload = function(e) {
-            $.jStorage.set("vinyl", e.target.result);
-            if($.jStorage.get("vinyl") != null)
-            {
-                console.log("Done.");
-                document.location.reload();
-            }
-        }
-
-        reader.readAsText(file);
-    });
-
-
-    /* UTILITY FUNCTIONS */
-
-    function getRandomColor() {
-        return 'rgb(' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ')';
-    }
-
-    function htmlEncode(value) {
-        return $('<div/>').text(value).html();
-    }
-
-    function htmlDecode(value) {
-        return $('<div/>').html(value).text();
-    }
-
-    function makePretty() {
         $("a[rel^='prettyPhoto']").prettyPhoto({
             animation_speed: 'normal', /* fast/slow/normal */
             opacity: 0.80,
@@ -411,6 +432,42 @@ $(document).ready(function(){
             deeplinking: false,
             social_tools: false
         });
+    }
+
+    function doneLoading() {
+        $('.loading').hide('slow');
+    }
+
+
+    /* EVENTS */
+
+    $('.spine').click(function() {
+        loadCover(this);
+    });
+
+    //TODO: Add loading spinner to file upload
+    $('#uploadFile').change(function() {
+        console.log("Uploading new data file...");
+        var file, reader;
+        file=document.getElementById("uploadFile").files[0];
+        reader=new FileReader();
+
+        reader.onload = function (e) {
+            $.jStorage.set("vinyl", e.target.result);
+            if ($.jStorage.get("vinyl") != null) {
+                console.log("Done.");
+                document.location.reload();
+            }
+        };
+
+        reader.readAsText(file);
+    });
+
+
+    /* UTILITY FUNCTIONS */
+
+    function htmlDecode(value) {
+        return $('<div/>').html(value).text();
     }
 
     function buildList() {

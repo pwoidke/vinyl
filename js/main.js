@@ -95,18 +95,18 @@ Record.prototype = function() {
     };
 }();
 
-function TrackObj() {
+function Track() {
     this.Position   =       null;
     this.Title      =       null;
     this.Duration   =       null;
 }
 
-function VideoObj() {
+function Video() {
     this.URL        =       null;
     this.Title      =       null;
 }
 
-function CoverObj() {
+function Cover() {
     this.URI        =       "img/noimg150.png";
     this.URI150     =       "img/noimg150.png";
 }
@@ -195,7 +195,7 @@ $(document).ready(function() {
     }
 
     function buildRecords(length) {
-        var i, j, Record, nextTrack, nextVideo, nextCover, Records = [];
+        var i, j, Record, infoArray, nextTrack, nextVideo, nextCover, Records = [];
 
         $('ol.records').empty();
 
@@ -209,88 +209,89 @@ $(document).ready(function() {
                 /* Set object properties */
 
                 //Artist
-                if(typeof records.releases.release[i].artists.artist.name === 'string')
+                if(_.isString(records.releases.release[i].artists.artist.name))
                 {
                     Record.Artist = records.releases.release[i].artists.artist.name;
                 }
-                else if(typeof records.releases.release[i].artists.artist[0].name === 'string')
+                else if(_.isString(records.releases.release[i].artists.artist[0].name))
                 {
-                    Record.Artist = records.releases.release[i].artists.artist[0].name;
-//TODO:                    Record.Artist = _.reduce(records.releases.release[i].artists.artist, function(artist){ return artist.name + ", "; });
+                    infoArray = _.map(records.releases.release[i].artists.artist, function(artist){ return artist.name; });
+                    Record.Artist = infoArray.join(", ");
                 }
                 else { console.log('Error: Artist'); }
 
                 //Title
-                if(typeof records.releases.release[i].title === 'string')
+                if(_.isString(records.releases.release[i].title))
                 {
                     Record.Title = records.releases.release[i].title;
                 }
                 else { console.log('Error: Title'); }
 
                 //Label
-                if(typeof records.releases.release[i].labels.label._name === 'string')
+                if(_.isString(records.releases.release[i].labels.label._name))
                 {
                     Record.Label = records.releases.release[i].labels.label._name;
                 }
-                else if(typeof records.releases.release[i].labels.label[0]._name === 'string')
+                else if(_.isString(records.releases.release[i].labels.label[0]._name))
                 {
-                    Record.Label = records.releases.release[i].labels.label[0]._name;
-//TODO:                    Record.Label = _.reduce(records.releases.release[i].labels.label, function(label){ return label._name + ", "; });
+                    infoArray = _.map(records.releases.release[i].labels.label, function(label){ return label._name; });
+                    Record.Label = infoArray.join(", ");
                 }
                 else { console.log('Error: Label'); }
 
                 //Format
-                if(typeof records.releases.release[i].formats.format !== 'undefined')
+                if(_.isObject(records.releases.release[i].formats.format[0]))
                 {
-                    if(typeof records.releases.release[i].formats.format._text === 'string')
+                    infoArray = [];
+                    _.each(records.releases.release[i].formats.format, function(format){
+                        if(_.isString(format._text))
+                        {
+                            infoArray.push(format._name + " (" + format._text + ")");
+                        }
+                        else if(_.isString(format._name))
+                        {
+                            infoArray.push(format._name);
+                        }
+                    });
+                    Record.Format = infoArray.join(", ");
+                }
+                else if(_.isObject(records.releases.release[i].formats.format))
+                {
+                    if(_.isString(records.releases.release[i].formats.format._text))
                     {
                         Record.Format = records.releases.release[i].formats.format._name + " (" + records.releases.release[i].formats.format._text + ")";
                     }
-                    else if(typeof records.releases.release[i].formats.format._name === 'string')
+                    else if(_.isString(records.releases.release[i].formats.format._name))
                     {
                         Record.Format = records.releases.release[i].formats.format._name;
-                    }
-                }
-                else if(typeof records.releases.release[i].formats.format[0] !== 'undefined')
-                {
-                    if(typeof records.releases.release[i].formats.format[0]._text === 'string')
-                    {
-                        Record.Format = records.releases.release[i].formats.format[0]._name + " (" + records.releases.release[i].formats.format[0]._text + ")";
-//TODO:                        Record.Format = _.reduce(records.releases.release[i].formats.format, function(format){ return format._name +  " (" + format._text + ")" + ", "; });
-                    }
-                    else if(typeof records.releases.release[i].formats.format[0]._name === 'string')
-                    {
-                        Record.Format = records.releases.release[i].formats.format[0]._name
-//TODO:                        Record.Format = _.reduce(records.releases.release[i].formats.format, function(format){ return format._name + ", "; });
                     }
                 }
                 else { console.log('Error: Format'); }
 
                 //Details
-                if(typeof records.releases.release[i].notes !== 'undefined')
+                if(_.isString(records.releases.release[i].notes))
                 {
                     Record.Details = htmlDecode(records.releases.release[i].notes);
                 }
 
                 //Notes
-                if(typeof records.releases.release[i].Collection_Notes === 'string')
+                if(_.isObject(records.releases.release[i].Collection_Notes[0]))
                 {
-                    Record.Notes = htmlDecode(records.releases.release[i].Collection_Notes);
+                    infoArray = _.map(records.releases.release[i].Collection_Notes, function(notes){ return htmlDecode(notes) + " "; });
+                    Record.Notes = infoArray.join(", ");
                 }
-                else if(typeof records.releases.release[i].Collection_Notes[0] === 'string')
+                else if(_.isString(records.releases.release[i].Collection_Notes))
                 {
-                    Record.Notes = records.releases.release[i].Collection_Notes[0];
-//TODO:                    Record.Notes = _.reduce(records.releases.release[i].Collection_Notes, function(notes){ return htmlDecode(notes) + " "; });
+                    Record.Notes = records.releases.release[i].Collection_Notes;
                 }
 
                 //Tracks
-                for(j=0;j<records.releases.release[i].tracklist.__cnt;j++)
+                if(_.isObject(records.releases.release[i].tracklist))
                 {
-                    nextTrack = new TrackObj();
-
-                    if(typeof records.releases.release[i].tracklist.track.title !== 'undefined')
+                    if(_.isString(records.releases.release[i].tracklist.track.title))
                     {
-                        if(typeof records.releases.release[i].tracklist.track.position !== 'object')
+                        nextTrack = new Track();
+                        if(_.isString(records.releases.release[i].tracklist.track.position))
                         {
                             nextTrack.Position = _.escape(records.releases.release[i].tracklist.track.position);
                             nextTrack.Title = _.escape(records.releases.release[i].tracklist.track.title);
@@ -299,97 +300,87 @@ $(document).ready(function() {
                         {
                             nextTrack.Title = "<b>" + _.escape(records.releases.release[i].tracklist.track.title) + "</b>";
                         }
-                    }
-                    else if((typeof records.releases.release[i].tracklist.track[j].title !== 'undefined') && (typeof records.releases.release[i].tracklist.track[j].title !== 'object'))
-                    {
-                        if(typeof records.releases.release[i].tracklist.track[j].position !== 'object')
-                        {
-                            nextTrack.Position = _.escape(records.releases.release[i].tracklist.track[j].position);
-                            nextTrack.Title = _.escape(records.releases.release[i].tracklist.track[j].title);
-                        }
-                        else
-                        {
-                            nextTrack.Title = "<b>" + _.escape(records.releases.release[i].tracklist.track[j].title) + "</b>";
-                        }
-                        if(typeof records.releases.release[i].tracklist.track[j].duration !== 'object')
-                        {
-                            nextTrack.Duration = _.escape(records.releases.release[i].tracklist.track[j].duration);
-                        }
-                    }
-                    else if(typeof records.releases.release[i].tracklist.track.title !== 'object')
-                    {
-                        if(typeof records.releases.release[i].tracklist.track.position !== 'object')
-                        {
-                            nextTrack.Position = _.escape(records.releases.release[i].tracklist.track.position);
-                            nextTrack.Title = _.escape(records.releases.release[i].tracklist.track.title);
-                        }
-                        else
-                        {
-                            nextTrack.Title = "<b>" + _.escape(records.releases.release[i].tracklist.track.title) + "</b>";
-                        }
-                        if(typeof records.releases.release[i].tracklist.track[j].duration !== 'object')
+                        if(_.isString(records.releases.release[i].tracklist.track.duration))
                         {
                             nextTrack.Duration = _.escape(records.releases.release[i].tracklist.track.duration);
                         }
+                        Record.Tracks.push(nextTrack);
                     }
-                    else { console.log('Error: Track'); }
-
-                    Record.Tracks.push(nextTrack);
+                    else
+                    {
+                        for(j=0;j<records.releases.release[i].tracklist.__cnt;j++)
+                        {
+                            nextTrack = new Track();
+                            if(_.isString(records.releases.release[i].tracklist.track[j].title))
+                            {
+                                if(_.isString(records.releases.release[i].tracklist.track[j].position))
+                                {
+                                    nextTrack.Position = _.escape(records.releases.release[i].tracklist.track[j].position);
+                                    nextTrack.Title = _.escape(records.releases.release[i].tracklist.track[j].title);
+                                }
+                                else
+                                {
+                                    nextTrack.Title = "<b>" + _.escape(records.releases.release[i].tracklist.track[j].title) + "</b>";
+                                }
+                                if(_.isString(records.releases.release[i].tracklist.track.duration))
+                                {
+                                    nextTrack.Duration = _.escape(records.releases.release[i].tracklist.track[j].duration);
+                                }
+                            }
+                            Record.Tracks.push(nextTrack);
+                        }
+                    }
                 }
 
                 //Videos
-                if(typeof records.releases.release[i].videos !== 'undefined')
+                if(_.isObject(records.releases.release[i].videos))
                 {
-                    for(j=0;j<records.releases.release[i].videos.__cnt;j++)
+                    if(_.isString(records.releases.release[i].videos.video.title))
                     {
-                        nextVideo = new VideoObj();
-
-                        if(typeof records.releases.release[i].videos.video.title === 'undefined')
-                        {
-                            nextVideo.URL = records.releases.release[i].videos.video[j]._src;
-                            nextVideo.Title = _.escape(records.releases.release[i].videos.video[j].title);
-                        }
-                        else if(typeof records.releases.release[i].videos.video[j] === 'undefined')
-                        {
-                            nextVideo.URL = records.releases.release[i].videos.video._src;
-                            nextVideo.Title = _.escape(records.releases.release[i].videos.video.title);
-                        }
-                        else { console.log('Error: Video'); }
-
+                        nextVideo = new Video();
+                        nextVideo.URL = records.releases.release[i].videos.video._src;
+                        nextVideo.Title = _.escape(records.releases.release[i].videos.video.title);
                         Record.Videos.push(nextVideo);
+                    }
+                    else
+                    {
+                        for(j=0;j<records.releases.release[i].videos.__cnt;j++)
+                        {
+                            nextVideo = new Video();
+                            if(_.isString(records.releases.release[i].videos.video[j].title))
+                            {
+                                nextVideo.URL = records.releases.release[i].videos.video[j]._src;
+                                nextVideo.Title = _.escape(records.releases.release[i].videos.video[j].title);
+                            }
+                            Record.Videos.push(nextVideo);
+                        }
                     }
                 }
 
                 //Cover
-                nextCover = new CoverObj();
-                if(typeof records.releases.release[i].images !== 'undefined')
+                if(_.isObject(records.releases.release[i].images))
                 {
-                    if (typeof records.releases.release[i].images.image[0] !== 'undefined')
+                    if(_.isString(records.releases.release[i].images.image._uri))
                     {
-                        for(j=0;j<records.releases.release[i].images.__cnt;j++)
-                        {
-                            nextCover.URI = records.releases.release[i].images.image[j]._uri;
-                            nextCover.URI150 = records.releases.release[i].images.image[j]._uri150;
-
-                            Record.Cover.push(nextCover);
-                            nextCover = new CoverObj();
-                        }
-                    }
-                    else if(typeof records.releases.release[i].images.image !== 'undefined')
-                    {
+                        nextCover = new Cover();
                         nextCover.URI = records.releases.release[i].images.image._uri;
                         nextCover.URI150 = records.releases.release[i].images.image._uri150;
-
                         Record.Cover.push(nextCover);
                     }
                     else
                     {
-                        Record.Cover.push(nextCover);
+                        for(j=0;j<records.releases.release[i].images.__cnt;j++)
+                        {
+                            nextCover = new Cover();
+                            nextCover.URI = records.releases.release[i].images.image[j]._uri;
+                            nextCover.URI150 = records.releases.release[i].images.image[j]._uri150;
+                            Record.Cover.push(nextCover);
+                        }
                     }
                 }
                 else
                 {
-                    Record.Cover.push(nextCover);
+                    Record.Cover.push(new Cover());
                 }
 
                 //Add artist/title to spine

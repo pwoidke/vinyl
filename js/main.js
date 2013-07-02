@@ -211,11 +211,11 @@ $(document).ready(function() {
                 //Artist
                 if(_.isString(records.releases.release[i].artists.artist.name))
                 {
-                    Record.Artist = records.releases.release[i].artists.artist.name;
+                    Record.Artist = records.releases.release[i].artists.artist.name.replace(/ \(\d+\)/, "");
                 }
                 else if(_.isString(records.releases.release[i].artists.artist[0].name))
                 {
-                    infoArray = _.map(records.releases.release[i].artists.artist, function(artist){ return artist.name; });
+                    infoArray = _.map(records.releases.release[i].artists.artist, function(artist){ return artist.name.replace(/ \(\d+\)/, ""); });
                     Record.Artist = infoArray.join(", ");
                 }
                 else { console.log('Error: Artist'); }
@@ -230,11 +230,11 @@ $(document).ready(function() {
                 //Label
                 if(_.isString(records.releases.release[i].labels.label._name))
                 {
-                    Record.Label = records.releases.release[i].labels.label._name;
+                    Record.Label = records.releases.release[i].labels.label._name.replace(/ \(\d+\)/, "");
                 }
                 else if(_.isString(records.releases.release[i].labels.label[0]._name))
                 {
-                    infoArray = _.map(records.releases.release[i].labels.label, function(label){ return label._name; });
+                    infoArray = _.map(records.releases.release[i].labels.label, function(label){ return label._name.replace(/ \(\d+\)/, ""); });
                     Record.Label = infoArray.join(", ");
                 }
                 else { console.log('Error: Label'); }

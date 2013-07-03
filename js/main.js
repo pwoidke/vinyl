@@ -16,8 +16,9 @@ var Record = function(id) {
 
 Record.prototype = function() {
     //Private
-    var createHTML = function(id) {
-            $('.records').append('<li class="spine" id="' + id + '" style="background-color: ' + 'rgb(' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ')' + '"><h3 class="artist-title"></h3><div class="info"><div class="infoLeft"><div class="cover"></div></div><div class="infoRight"><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div></div><div class="tracks"><ul class="trackList"><li>No track information :(</li></ul></div><div class="videos"><ul class="videoList"><li>No videos :(</li></ul></div></div></li>');
+    var appendTracks = "", appendVideos = "",
+        createHTML = function(id) {
+            $('.records').append('<li class="spine" id="' + id + '" style="background-color: ' + 'rgb(' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ')' + '"><h3 class="artist-title"></h3><div class="info"><div class="infoLeft"><div class="cover"></div></div><div class="infoRight"><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div></div><div class="tracks"></div><div class="videos"></div></div></li>');
         },
 
         setArtistTitle = function () {
@@ -58,33 +59,45 @@ Record.prototype = function() {
             //Tracks
             if(this.Tracks.length > 0)
             {
-                $(item).find('ul.trackList').text('');
+                appendTracks = '<ul class="trackList">';
                 _.each(this.Tracks, function(track){
-                    $(item).find('ul.trackList').append("<li>");
+                    appendTracks += "<li>";
                     if(track.Position)
                     {
-                        $(item).find('ul.trackList').append(track.Position + ": ");
+                        appendTracks += track.Position + ": ";
                     }
                     if(track.Title)
                     {
-                        $(item).find('ul.trackList').append(track.Title);
+                        appendTracks += track.Title;
                     }
                     if(track.Duration)
                     {
-                        $(item).find('ul.trackList').append(" (" + track.Duration + ")");
+                        appendTracks += track.Duration + ")";
                     }
-                    $(item).find('ul.trackList').append("</li>");
+                    appendTracks += "</li>";
                 });
+                appendTracks += '</ul>';
             }
+            else
+            {
+                appendTracks = '<ul class="trackList"><li>No track information :(</li></ul>';
+            }
+            $(item).find('.tracks').append(appendTracks);
 
             //Videos
             if(this.Videos.length > 0)
             {
-                $(item).find('ul.videoList').text('');
+                appendVideos = '<ul class="videoList">';
                 _.each(this.Videos, function(video){
-                    $(item).find('ul.videoList').append('<li><a href="' + video.URL + '" rel="prettyPhoto[' + item.Title + ' Videos]" title="' + video.Title + '">' + video.Title + '</a></li>');
+                    appendVideos += '<li><a href="' + video.URL + '" rel="prettyPhoto[' + item.Title + ' Videos]" title="' + video.Title + '">' + video.Title + '</a></li>';
                 });
+                appendVideos += '</ul>';
             }
+            else
+            {
+                appendVideos = '<ul class="videoList"><li>No videos :(</li></ul>';
+            }
+            $(item).find('.videos').append(appendVideos);
         };
 
     //Public
@@ -404,14 +417,18 @@ $(document).ready(function() {
     /* Function to load cover, tracks, and videos */
     function loadCover(item) {
         //Cover
-        var id, i;
+        var id, i, appendCovers = "";
         id = item.id;
 
         $(item).find('.cover').html('<a href="' + records[id].Cover[0].URI + '" rel="prettyPhoto[' + records[id].Title + ']" ><img src="' + records[id].Cover[0].URI150 + '" height="150" width="150" /></a>');
 
-        for(i=1;i<records[id].Cover.length;i++)
+        if(records[id].Cover.length > 1)
         {
-            $(item).find('.cover').append('<a href="' + records[id].Cover[i].URI + '" rel="prettyPhoto[' + records[id].Title + ']" ></a>');
+            for(i=1;i<records[id].Cover.length;i++)
+            {
+                appendCovers += '<a href="' + records[id].Cover[i].URI + '" rel="prettyPhoto[' + records[id].Title + ']" ></a>';
+            }
+            $(item).find('.cover').append(appendCovers);
         }
 
         $("a[rel^='prettyPhoto']").prettyPhoto({

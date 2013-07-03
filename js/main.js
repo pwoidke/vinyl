@@ -7,6 +7,7 @@ var Record = function(id) {
     this.Title      = 		"(No Title)";
     this.Label      = 		"(None)";
     this.Format     = 		"(None)";
+    this.Size       =       12;
     this.Cover      =		[];
     this.Details    =		"";
     this.Notes      =		"";
@@ -16,13 +17,49 @@ var Record = function(id) {
 
 Record.prototype = function() {
     //Private
+    function searchStringInArray (str, strArray) {
+        for (var j=0; j<strArray.length; j++) {
+            if (strArray[j].match(str)) return j;
+        }
+        return -1;
+    }
+
     var appendTracks = "", appendVideos = "",
-        createHTML = function(id) {
-            $('.records').append('<li class="spine" id="' + id + '" style="background-color: ' + 'rgb(' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ')' + '"><h3 class="artist-title"></h3><div class="info"><div class="infoLeft"><div class="cover"></div></div><div class="infoRight"><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div></div><div class="tracks"></div><div class="videos"></div></div></li>');
+
+        setSize = function (descriptions) {
+            if(!_.isUndefined(descriptions))
+            {
+                if(_.isUndefined(descriptions.description))
+                {
+                    if((searchStringInArray("7", descriptions) >= 0) ||
+                        (searchStringInArray("45", descriptions) >= 0))
+                    {
+                        this.Size = 7;
+                    }
+                    else if(searchStringInArray("10", descriptions) >= 0)
+                    {
+                        this.Size = 10;
+                    }
+                }
+                else
+                {
+                    if((searchStringInArray("7", descriptions.description) >= 0) ||
+                        (searchStringInArray("45", descriptions.description) >= 0))
+                    {
+                        this.Size = 7;
+                    }
+                    else if(searchStringInArray("10", descriptions.description) >= 0)
+                    {
+                        this.Size = 10;
+                    }
+                }
+            }
         },
 
         setArtistTitle = function () {
-            $('#' + this.id + '.spine .artist-title').html(this.Artist + " - " + this.Title);
+            var div = $('#' + this.id + '.spine');
+            div.addClass('spine' + this.Size);
+            div.find('.artist-title').html(this.Artist + " - " + this.Title);
         },
 
         setInfo = function() {
@@ -102,7 +139,7 @@ Record.prototype = function() {
 
     //Public
     return {
-        createHTML: createHTML,
+        setSize: setSize,
         setArtistTitle: setArtistTitle,
         setInfo: setInfo
     };
@@ -203,14 +240,19 @@ $(document).ready(function() {
 
     function AddRecord(id) {
         var record = new Record(id);
-        record.createHTML(id);
         return record;
     }
 
     function buildRecords(length) {
-        var i, j, Record, infoArray, nextTrack, nextVideo, nextCover, Records = [];
+        var i, j, RecordListHTML, Record, infoArray, nextTrack, nextVideo, nextCover, Records = [];
 
-        $('ol.records').empty();
+        RecordListHTML = '<ol class="records list">';
+        for(i=0;i<length;i++)
+        {
+            RecordListHTML += '<li class="spine" id="' + i + '" style="background-color: ' + 'rgb(' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ')' + '"><h3 class="artist-title"></h3><div class="info"><div class="infoLeft"><div class="cover"></div></div><div class="infoRight"><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div></div><div class="tracks"></div><div class="videos"></div></div></li>';
+        }
+        RecordListHTML += '</ol>';
+        $('#shelf').html(RecordListHTML);
 
         /* Add records to list */
         for(i=0;i<length;i++)
@@ -267,9 +309,12 @@ $(document).ready(function() {
                         }
                     });
                     Record.Format = infoArray.join(", ");
+
+                    Record.setSize(records.releases.release[i].formats.format[0].descriptions);
                 }
                 else if(_.isObject(records.releases.release[i].formats.format))
                 {
+                    //records.releases.release[i].formats.format[0].descriptions.description
                     if(_.isString(records.releases.release[i].formats.format._text))
                     {
                         Record.Format = records.releases.release[i].formats.format._name + " (" + records.releases.release[i].formats.format._text + ")";
@@ -278,6 +323,8 @@ $(document).ready(function() {
                     {
                         Record.Format = records.releases.release[i].formats.format._name;
                     }
+
+                    Record.setSize(records.releases.release[i].formats.format.descriptions.description);
                 }
                 else { console.log('Error: Format'); }
 
@@ -288,14 +335,17 @@ $(document).ready(function() {
                 }
 
                 //Notes
-                if(_.isObject(records.releases.release[i].Collection_Notes[0]))
+                if(!_.isUndefined(records.releases.release[i].Collection_Notes))
                 {
-                    infoArray = _.map(records.releases.release[i].Collection_Notes, function(notes){ return htmlDecode(notes) + " "; });
-                    Record.Notes = infoArray.join(", ");
-                }
-                else if(_.isString(records.releases.release[i].Collection_Notes))
-                {
-                    Record.Notes = records.releases.release[i].Collection_Notes;
+                    if(_.isObject(records.releases.release[i].Collection_Notes[0]))
+                    {
+                        infoArray = _.map(records.releases.release[i].Collection_Notes, function(notes){ return htmlDecode(notes) + " "; });
+                        Record.Notes = infoArray.join(", ");
+                    }
+                    else if(_.isString(records.releases.release[i].Collection_Notes))
+                    {
+                        Record.Notes = records.releases.release[i].Collection_Notes;
+                    }
                 }
 
                 //Tracks
@@ -443,7 +493,7 @@ $(document).ready(function() {
     }
 
     function doneLoading() {
-        $('.loading').hide('slow');
+        $('#loading').hide('slow');
     }
 
 
@@ -453,8 +503,44 @@ $(document).ready(function() {
         loadCover(this);
     });
 
-    //TODO: Add loading spinner to file upload
+    $('#sort12').click(function() {
+        $('.spine12').toggle('slow');
+        if($('#sort12').text().indexOf("Hide") >= 0)
+        {
+            $('#sort12').text($('#sort12').text().replace("Hide","Show"));
+        }
+        else
+        {
+            $('#sort12').text($('#sort12').text().replace("Show","Hide"));
+        }
+    });
+
+    $('#sort10').click(function() {
+        $('.spine10').toggle('slow');
+        if($('#sort10').text().indexOf("Hide") >= 0)
+        {
+            $('#sort10').text($('#sort10').text().replace("Hide","Show"));
+        }
+        else
+        {
+            $('#sort10').text($('#sort10').text().replace("Show","Hide"));
+        }
+    });
+
+    $('#sort7').click(function() {
+        $('.spine7').toggle('slow');
+        if($('#sort7').text().indexOf("Hide") >= 0)
+        {
+            $('#sort7').text($('#sort7').text().replace("Hide","Show"));
+        }
+        else
+        {
+            $('#sort7').text($('#sort7').text().replace("Show","Hide"));
+        }
+    });
+
     $('#uploadFile').change(function() {
+        $('#loading').show(0);
         console.log("Uploading new data file...");
         var file, reader;
         file=document.getElementById("uploadFile").files[0];
@@ -481,7 +567,7 @@ $(document).ready(function() {
     function buildList() {
         var options, recordList;
         options = {
-            valueNames: [ 'artist', 'title', 'label', 'format' ],
+            valueNames: [ 'artist', 'title', 'label'],
             page: 500
         };
         recordList = new List('recordList', options);

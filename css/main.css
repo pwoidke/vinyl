@@ -112,7 +112,7 @@ footer {
     min-width: 200px;
 }
 
-.container {
+#container {
     background-color: black;
     width:61.8%;
     margin-left: auto;
@@ -121,7 +121,7 @@ footer {
     /*min-width: 190px;*/
 }
 
-.loading {
+#loading {
     width: 100%;
     background-color: #333333;
     text-align: center;
@@ -146,7 +146,7 @@ footer {
     display: inline-block;
 }
 
-.shelf {
+#shelf {
 
 }
 
@@ -155,8 +155,27 @@ footer {
     padding: 0;
 }
 
-.spine {
+.spine12 {
     margin-bottom: 2px;
+    width:100%;
+}
+
+.spine10 {
+    margin-bottom: 2px;
+    width:83.3%;
+}
+
+.spine7 {
+    margin-bottom: 2px;
+    width:58.3%;
+}
+
+.LP {
+    width: 100%;
+}
+
+.EP {
+    width: 58%;
 }
 
 .artist-title {
@@ -193,7 +212,7 @@ footer {
 /* Smartphones (portrait and landscape) */
 @media only screen
 and (max-width : 480px) {
-    .container {
+    #container {
         width:100%;
     }
 }

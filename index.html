@@ -34,26 +34,26 @@
                     <div class="sortButtons">
                         <div class="sort" data-sort="artist">Sort by Artist</div>
                         <div class="sort" data-sort="title">Sort by Title</div>
-                    </div>
-                    <div class="sortButtons">
                         <div class="sort" data-sort="label">Sort by Label</div>
-                        <div class="sort" data-sort="format">Sort by Format</div>
                     </div>
                     <div class="sortButtons">
-                        <form>
-                            <input type="file" id="uploadFile" name="uploadFile">
-                        </form>
+                        <div class="sort" id="sort12">Hide 12"</div>
+                        <div class="sort" id="sort10">Hide 10"</div>
+                        <div class="sort" id="sort7">Hide 7"</div>
                     </div>
+                </div>
+                <div class="sortButtons">
+                    <form>
+                        <input type="file" id="uploadFile" name="uploadFile">
+                    </form>
                 </div>
             </header>
 
-            <div class="container">
-                <div class="loading">
+            <div id="container">
+                <div id="loading">
                     <img src="img/loading.gif">
                 </div>
-                <div class="shelf">
-                    <ol class="records list"></ol>
-                </div>
+                <div id="shelf"></div>
             </div>
 
             <footer>

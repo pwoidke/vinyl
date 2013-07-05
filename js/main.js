@@ -1,5 +1,5 @@
 
-var Record = function(id) {
+var RecordObj = function(id) {
     //State
     this.id         =       id;
     this.spine      =       $('#' + this.id + '.spine');
@@ -15,7 +15,7 @@ var Record = function(id) {
     this.Videos     =		[];
 };
 
-Record.prototype = function() {
+RecordObj.prototype = function() {
     //Private
     function searchStringInArray (str, strArray) {
         for (var j=0; j<strArray.length; j++) {
@@ -231,22 +231,17 @@ $(document).ready(function() {
         console.log("Loading complete.");
     }
 
-    $('.records').accordion({
+    $('#records').accordion({
         header: "h3",
         collapsible: true,
         heightStyle: "content",
         active: false
     });
 
-    function AddRecord(id) {
-        var record = new Record(id);
-        return record;
-    }
-
     function buildRecords(length) {
         var i, j, RecordListHTML, Record, infoArray, nextTrack, nextVideo, nextCover, Records = [];
 
-        RecordListHTML = '<ol class="records list">';
+        RecordListHTML = '<ol class="list" id="records">';
         for(i=0;i<length;i++)
         {
             RecordListHTML += '<li class="spine" id="' + i + '" style="background-color: ' + 'rgb(' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ',' + (Math.floor((200)*Math.random())) + ')' + '"><h3 class="artist-title"></h3><div class="info"><div class="infoLeft"><div class="cover"></div></div><div class="infoRight"><div class="artist"></div><div class="title"></div><div class="label"></div><div class="format"></div><div class="details"></div><div class="notes"></div></div><div class="tracks"></div><div class="videos"></div></div></li>';
@@ -259,7 +254,7 @@ $(document).ready(function() {
         {
             try
             {
-                Record = new AddRecord(i);
+                Record = new RecordObj(i);
 
                 /* Set object properties */
 
@@ -536,6 +531,25 @@ $(document).ready(function() {
         else
         {
             $('#sort7').text($('#sort7').text().replace("Show","Hide"));
+        }
+    });
+
+    $('#sortFormat').click(function() {
+        var items7in, items1210in;
+
+        items7in = $('#records').find('.spine7');
+        items1210in = $('#records').find('.spine12, .spine10');
+
+        $('.spine').detach();
+        if($('#records').find('li')[0].className.indexOf("7") < 0)  //12" or 10" is first
+        {
+            $('#records').append(items7in);
+            $('#records').append(items1210in);
+        }
+        else
+        {
+            $('#records').append(items1210in);
+            $('#records').append(items7in);
         }
     });
 

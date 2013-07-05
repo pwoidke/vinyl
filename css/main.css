@@ -99,7 +99,7 @@ header, footer {
 }
 
 header {
-    margin-bottom: 50px;
+    margin-bottom: 30px;
 }
 
 footer {
@@ -127,8 +127,8 @@ footer {
     text-align: center;
 }
 
-.searchBar, .sort {
-    min-width:100px;
+.searchBar, .sort, .button {
+    min-width:90px;
     background-color: chartreuse;
     display: inline-block;
     padding: 5px;
@@ -137,7 +137,7 @@ footer {
     border-radius: 10px;
 }
 
-.sort {
+.sort, .button {
     cursor: hand;
     cursor: pointer;
 }
@@ -150,7 +150,7 @@ footer {
 
 }
 
-.records {
+#records {
     list-style: none;
     padding: 0;
 }

@@ -193,6 +193,7 @@ footer {
     display: inline-block;
     width: 50%;
     min-width: 175px;
+    vertical-align: top;
 }
 
 .infoLeft {
